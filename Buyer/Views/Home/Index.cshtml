@@ -1,0 +1,583 @@
+﻿@model (List<Buyer.Mvc.Models.ItemOrder> ListItemOrder, List<Buyer.Mvc.Models.ItemSeason> listSeason, List<Buyer.Mvc.Models.ItemCategory> listCategory)
+@{
+    ViewData["Title"] = "Home Page";
+}
+@using System.Globalization;
+@section CSS{
+    <link rel="stylesheet" href="~/css/home.css" />
+}
+
+<div class="TotalOrder">
+    <label for="nav-mobile-input" class="nav_bars-btn"><span>Total Cart</span></label>
+    <input type="checkbox" hidden class="nav_input" id="nav-mobile-input">
+    <label for="nav-mobile-input" class="nav_overlay" ></label>
+
+    <div class="nav_mobile">
+        <label for="nav-mobile-input" class="nav_mobile_close">
+            <span class="btn btn-primary mb-2">Close</span>
+        </label>
+        <form method="post">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="infor-right">
+                        <div class="price-box flex" style="padding-left: 50%;">
+                            <p style="margin-bottom: 3px;transform: translateX(-50%);" class="price">TOTAl ORDER</p>
+                        </div>
+                        <div class="infor-detail">
+                            <table class="table table-striped table-bordered table-sm infor-table">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th scope="col">Image</th>
+                                        <th scope="col">Color</th>
+                                        <th scope="col">S</th>
+                                        <th scope="col">M</th>
+                                        <th scope="col">L</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Blue</td>
+                                        <td>Blue</td>
+                                        <td>
+                                            <div class="infor-detail-mount">
+                                                <input value="0" class="infor-detail-mount-input" type="number">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="infor-detail-mount">
+                                                <input value="0" class="infor-detail-mount-input" type="number">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="infor-detail-mount">
+                                                <input value="0" class="infor-detail-mount-input" type="number">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            @*<table id="example" class="table table-striped table-bordered table-sm infor-table"
+                data-show-export="true"
+                data-show-toggle="true"
+                data-show-columns="true"
+                data-export-data-type="excel"
+                data-click-to-select="true"
+                data-height="600"
+                data-pagination="true"
+                data-export-types=['excel']
+                data-page-list="[10, 25, 50, 100, 200, All]">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Màu</th>
+                    <th class="infor-detail-size" colspan="50">Size</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">Blue</th>
+                    <td>
+                        <div class="infor-detail-mount">
+                            <div class="infor-detail-mount-label">
+                                <Span>XXL</Span>
+                            </div>
+                            <input class="infor-detail-mount-input" type="number">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="infor-detail-mount">
+                            <div class="infor-detail-mount-label">
+                                <Span>S</Span>
+                            </div>
+                            <input class="infor-detail-mount-input" type="number">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="infor-detail-mount">
+                            <div class="infor-detail-mount-label">
+                                <Span>XXL</Span>
+                            </div>
+                            <input class="infor-detail-mount-input" type="number">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="infor-detail-mount">
+                            <div class="infor-detail-mount-label">
+                                <Span>XL</Span>
+                            </div>
+                            <input class="infor-detail-mount-input" type="number">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="infor-detail-mount">
+                            <div class="infor-detail-mount-label">
+                                <Span>L</Span>
+                            </div>
+                            <input class="infor-detail-mount-input" type="number">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">Purple</th>
+                    <td>
+                        <div class="infor-detail-mount">
+                            <div class="infor-detail-mount-label">
+                                <Span>XS</Span>
+                            </div>
+                            <input class="infor-detail-mount-input" type="number">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="infor-detail-mount">
+                            <div class="infor-detail-mount-label">
+                                <Span>XL</Span>
+                            </div>
+                            <input class="infor-detail-mount-input" type="number">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="infor-detail-mount">
+                            <div class="infor-detail-mount-label">
+                                <Span>L</Span>
+                            </div>
+                            <input class="infor-detail-mount-input" type="number">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">Orange</th>
+                    <td>
+                        <div class="infor-detail-mount">
+                            <div class="infor-detail-mount-label">
+                                <Span>XS</Span>
+                            </div>
+                            <input class="infor-detail-mount-input" type="number">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="infor-detail-mount">
+                            <div class="infor-detail-mount-label">
+                                <Span>XS</Span>
+                            </div>
+                            <input class="infor-detail-mount-input" type="number">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="infor-detail-mount">
+                            <div class="infor-detail-mount-label">
+                                <Span>XS</Span>
+                            </div>
+                            <input class="infor-detail-mount-input" type="number">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="infor-detail-mount">
+                            <div class="infor-detail-mount-label">
+                                <Span>XS</Span>
+                            </div>
+                            <input class="infor-detail-mount-input" type="number">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="infor-detail-mount">
+                            <div class="infor-detail-mount-label">
+                                <Span>XS</Span>
+                            </div>
+                            <input class="infor-detail-mount-input" type="number">
+                        </div>
+                    </td>
+
+                    <td>
+                        <div class="infor-detail-mount">
+                            <div class="infor-detail-mount-label">
+                                <Span>XL</Span>
+                            </div>
+                            <input class="infor-detail-mount-input" type="number">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="infor-detail-mount">
+                            <div class="infor-detail-mount-label">
+                                <Span>L</Span>
+                            </div>
+                            <input class="infor-detail-mount-input" type="number">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">Yellow</th>
+                    <td>
+                        <div class="infor-detail-mount">
+                            <div class="infor-detail-mount-label">
+                                <Span>XL</Span>
+                            </div>
+                            <input class="infor-detail-mount-input" type="number">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="infor-detail-mount">
+                            <div class="infor-detail-mount-label">
+                                <Span>S</Span>
+                            </div>
+                            <input class="infor-detail-mount-input" type="number">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="infor-detail-mount">
+                            <div class="infor-detail-mount-label">
+                                <Span>S</Span>
+                            </div>
+                            <input class="infor-detail-mount-input" type="number">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="infor-detail-mount">
+                            <div class="infor-detail-mount-label">
+                                <Span>S</Span>
+                            </div>
+                            <input class="infor-detail-mount-input" type="number">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="infor-detail-mount">
+                            <div class="infor-detail-mount-label">
+                                <Span>S</Span>
+                            </div>
+                            <input class="infor-detail-mount-input" type="number">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="infor-detail-mount">
+                            <div class="infor-detail-mount-label">
+                                <Span>S</Span>
+                            </div>
+                            <input class="infor-detail-mount-input" type="number">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">Green</th>
+                    <td>
+                        <div class="infor-detail-mount">
+                            <div class="infor-detail-mount-label">
+                                <Span>M</Span>
+                            </div>
+                            <input class="infor-detail-mount-input" type="number">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="infor-detail-mount">
+                            <div class="infor-detail-mount-label">
+                                <Span>L</Span>
+                            </div>
+                            <input class="infor-detail-mount-input" type="number">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="infor-detail-mount">
+                            <div class="infor-detail-mount-label">
+                                <Span>XS</Span>
+                            </div>
+                            <input class="infor-detail-mount-input" type="number">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="infor-detail-mount">
+                            <div class="infor-detail-mount-label">
+                                <Span>XS</Span>
+                            </div>
+                            <input class="infor-detail-mount-input" type="number">
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="TotalPrice">
+                <p style="margin-bottom: 0px; font-size: 20px; font-weight: 500">Total Price: 25.000.000 VNĐ</p>
+            </div>
+            <button type="submit" class="btn btn-primary mt-4 mr-5">Confirm</button>
+        </form>
+    </div>
+</div>
+
+<div class="presentacion">
+    <div class="logo">
+        <img src="/image/logo-main.png" alt="">
+    </div>
+</div>
+
+<div class="filter">
+    <form>
+        <select style="width: 300px">
+            @foreach (var item in Model.listSeason)
+            {
+                <option value="@item.SeasonCode">@item.SeasonCode - @item.Description</option>
+            }
+        </select>
+        @*<button id="filter" type="submit" class="btn btn-secondary">Filter</button>*@
+        <select style="width: 300px">
+            @foreach (var item in Model.listCategory)
+            {
+                <option value="@item.CategoryCode">@item.CategoryCode - @item.Description</option>
+            }
+        </select>
+
+    </form>
+</div>
+
+
+@foreach (var item in Model.ListItemOrder)
+{
+    <section>
+        <div class="container1" data-item="@item.ItemCode">
+            <form method="post">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div>
+                            @*<img src="http://192.168.169.240/images/products/@item.Picture.Trim()" style="max-width:100%" />*@
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="infor-right">
+                            <div class="price-box flex">
+                                <p class="price">@item.Description - @String.Format(CultureInfo.InvariantCulture, "{0:0,0}", item.FobPrice) đ </p>
+                            </div>
+                            <div class="infor-detail" style="padding-left: 10px;padding-right: 10px">
+                                <div class="box-gray o1">
+                                    <div class="inventory flex">
+                                        <span>Item Code:</span>
+                                        <p>@item.ItemCode</p>
+
+                                    </div>
+                                    <div class="product-code flex">
+                                        <span>Season:</span>
+                                        <p>@item.SeasonCode</p>
+                                    </div>
+                                </div>
+                                <div class="box-gray o2 ">
+                                    <div class="producer flex">
+                                        <span>Proto Sample:</span>
+                                        <p>@item.ProtoSampleCode</p>
+                                    </div>
+                                    <div class="product-type flex">
+                                        <span>Category</span>
+                                        <p>@item.CategoryCode</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="infor-detail">
+                                <table class="table table-striped table-bordered table-sm infor-table">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th scope="col">Sample</th>
+                                            <th scope="col">Color</th>
+                                            <th scope="col">S</th>
+                                            <th scope="col">M</th>
+                                            <th scope="col">L</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><img width="30" src="~/image/logo.png" /></td>
+                                            <td>Blue</td>
+                                            <td>
+                                                <div class="infor-detail-mount">
+                                                    <input value="0" class="infor-detail-mount-input" type="number">
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="infor-detail-mount">
+                                                    <input value="0" class="infor-detail-mount-input" type="number">
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="infor-detail-mount">
+                                                    <input value="0" class="infor-detail-mount-input" type="number">
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><img width="30" src="~/image/logo.png" /></td>
+                                            <td>Blue</td>
+                                            <td>
+                                                <div class="infor-detail-mount">
+                                                    <input value="0" class="infor-detail-mount-input" type="number">
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="infor-detail-mount">
+                                                    <input value="0" class="infor-detail-mount-input" type="number">
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="infor-detail-mount">
+                                                    <input value="0" class="infor-detail-mount-input" type="number">
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><img width="30" src="~/image/logo.png" /></td>
+                                            <td>Blue</td>
+                                            <td>
+                                                <div class="infor-detail-mount">
+                                                    <input value="0" class="infor-detail-mount-input" type="number">
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="infor-detail-mount">
+                                                    <input value="0" class="infor-detail-mount-input" type="number">
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="infor-detail-mount">
+                                                    <input value="0" class="infor-detail-mount-input" type="number">
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><img width="30" src="~/image/logo.png" /></td>
+                                            <td>Blue</td>
+                                            <td>
+                                                <div class="infor-detail-mount">
+                                                    <input value="0" class="infor-detail-mount-input" type="number">
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="infor-detail-mount">
+                                                    <input value="0" class="infor-detail-mount-input" type="number">
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="infor-detail-mount">
+                                                    <input value="0" class="infor-detail-mount-input" type="number">
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <!--<table class="table table-striped table-bordered table-sm infor-table" style="border-collapse: inherit;">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Color</th>
+                <th class="infor-detail-size" colspan="50">Size</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var itemOrderColor in item.ListItemOrderColor)
+            {
+                <tr>
+                    <th scope="row">@itemOrderColor.ColorName</th>
+                    @foreach (var size in itemOrderColor.ListSizeName)
+                    {
+                        <td>
+                            <div class="infor-detail-mount">
+                                <div class="infor-detail-mount-label">
+                                    <Span>@size</Span>
+                                </div>
+                                <input data-varient="" class="infor-detail-mount-input" value="0" type="number">
+                            </div>
+                        </td>
+                    }
+                </tr>
+            }
+            <tr style="display: none">
+                <th scope="row"></th>
+                <td><button type="submit" class="btn btn-primary mt-4 mr-5 tempBtnConfirmAddItem">Confirm</button></td>-->
+                                @*<td><button type="submit" class="btn btn-primary mt-4">Reset</button></td>*@
+                                <!--</tr>
+        </tbody>
+    </table>-->
+                            </div>
+                            <div class="form-group">
+                                <label class="text-secondary">Enter your retail price:</label>
+                                <input style="max-width: 200px;" name="retailPrice" class="form-control InputRetaiPrice" type="number" required="">
+                            </div>
+                            <button type="submit" class="btn btn-primary mt-4 mr-5 btnConfirmAddItem">Confirm</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+}
+
+
+<div class="modal" id="confirmAddItem" style="background-color: rgb(79 77 77 / 30%);">
+    <div class="modal-dialog">
+        <div class="modal-content" style="margin-top: 50%;">
+            <div class="modal-header">
+                <h4 class="modal-title" id="addTargetLabel">Are you sure to add this item?</h4>
+            </div>
+            <div class="modal-body">
+                <form method="post">
+                    <input name="tempStringOrder" id="tempStringOrder" type="text" class="form-control" style="display: none">
+                    <input name="itemCode" id="itemCode" style="display: none">
+                    <input name="retailPrice" id="retailPrice" style="display: none">
+                    <button asp-action="InsertItemOrder" class="btn btn-primary btn-sm">OK</button>
+                    <button id="btnCancelAddItem" type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Cancel</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        $(function () {
+            $('#example').bootstrapTable('destroy').bootstrapTable({
+                toolbar: '.toolbar',
+                search: true,
+                showColumns: true,
+                fixedColumns: true,
+                fixedNumber: 0,
+                fixedRightNumber: 0
+            });
+
+            //confirm form
+            $(".btnConfirmAddItem").click(function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                let tempString = "";
+                let ColorName = 0, countSize = 0, SizeName = "", Quantity = 0;
+
+                //let countColor = Number($(this).parents('tr').siblings().length);
+                let countColor = Number($(this).parents('.container1').find('.tempBtnConfirmAddItem').parents('tr').siblings().length);
+
+                for (let i = 0; i < countColor; i++) {
+                    //ColorName = $(this).parents('tr').siblings().eq(i).children().eq(0)[0].innerHTML;
+                    ColorName = $(this).parents('.container1').find('.tempBtnConfirmAddItem').parents('tr').siblings().eq(i).children().eq(0)[0].innerHTML;
+                    //countSize = Number($(this).parents('tr').siblings().eq(i).children().length) - 1;
+                    countSize = Number($(this).parents('.container1').find('.tempBtnConfirmAddItem').parents('tr').siblings().eq(i).children().length) - 1;
+
+                    for (let j = 1; j <= countSize; j++) {
+                        tempString = tempString + ColorName + '  ';
+                        //SizeName = $(this).parents('tr').siblings().eq(i).children().eq(j).find('span')[0].innerHTML;
+                        SizeName = $(this).parents('.container1').find('.tempBtnConfirmAddItem').parents('tr').siblings().eq(i).children().eq(j).find('span')[0].innerHTML;
+                        tempString = tempString + SizeName + '  ';
+
+                        //Quantity = $(this).parents('tr').siblings().eq(i).children().eq(j).find('input').val()
+                        Quantity = $(this).parents('.container1').find('.tempBtnConfirmAddItem').parents('tr').siblings().eq(i).children().eq(j).find('input').val()
+                        tempString = tempString + Quantity + '  ';
+                    }
+                }
+
+                $("#tempStringOrder").val(tempString);
+                let itemcode = $(this).parents('.container1').attr('data-item');
+                $("#itemCode").val(itemcode);
+                let retailprice = $(this).parents('.container1').find('.InputRetaiPrice').val();
+                $("#retailPrice").val(retailprice);
+                $("#confirmAddItem").fadeIn(300);
+            });
+
+            $("#btnCancelAddItem").click(function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $("#confirmAddItem").fadeOut(300);
+            });
+        });
+    </script>
+}
