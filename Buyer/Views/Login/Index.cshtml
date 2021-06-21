@@ -1,4 +1,4 @@
-﻿@model (bool enableErrBuyerUser, bool enableErrPassword)
+﻿@model (string ErrUserID, string ErrPassword);
 @{
     Layout = "_LayoutLogin";
     ViewData["Title"] = "Login page";
@@ -9,22 +9,20 @@
         <div class="col-10 col-sm-8 col-md-6 col-lg-6 offset-1 offset-sm-2 offset-md-3 offset-lg-0 align-self-center d-lg-flex align-items-lg-center align-self-lg-stretch bg-white p-5 rounded rounded-lg-0 my-5 my-lg-0"
              id="login-block">
             <div class="m-auto w-lg-75 w-xl-50">
-                @*<h2 class="text-info font-weight-light mb-5"><i class="fa fa-diamond"></i>&nbsp;Routine</h2>*@
                 <div style="display: flex; margin-bottom:30px">
                     <img style="height: 60px; margin-right: 5px" src="~/image/logo.png" />
                     <h1>outine</h1>
                 </div>
-                @*<h2 class="text-info font-weight-light mb-5">outine</h2>*@
                 <form method="post">
                     <div class="form-group">
                         <label class="text-secondary">Username</label>
-                        <input name="BuyerUser" class="form-control" type="text" inputmode="email" required="">
-                        <span style="display: @(Model.enableErrBuyerUser ? "block" : "none");color: red;">User không tồn tại!</span>
+                        <input name="UserID" class="form-control" type="text" required="">
+                        <span  class="text-danger">@Model.ErrUserID</span>
                     </div>
                     <div class="form-group">
                         <label class="text-secondary">Password</label>
-                        <input name="Pass" class="form-control" type="password" required="">
-                        <span style="display: @(Model.enableErrPassword ? "block" : "none");color: red;">Mật khẩu không chính xác!</span>
+                        <input name="Password" class="form-control" type="password" required="">
+                        <span class="text-danger">@Model.ErrPassword</span>
                     </div>
                     <button asp-action="LoginToPage" class="btn btn-info mt-2" type="submit">Log In</button>
                 </form>

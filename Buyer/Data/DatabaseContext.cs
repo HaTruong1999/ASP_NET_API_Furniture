@@ -24,6 +24,9 @@ namespace Buyer.Data
 			modelbuilder.Entity<BuyerUser>().HasNoKey();
 
 			modelbuilder.Entity<OrderHeader>().HasNoKey();
+
+			//Update
+			modelbuilder.Entity<OrderUser>().HasNoKey();
 		}
 		#region DbSet
 		public DbSet<Size> SizeDbs { get; set; }
@@ -36,6 +39,8 @@ namespace Buyer.Data
 		public DbSet<BuyerUser> BuyerUserDbs { get; set; }
 		public DbSet<OrderHeader> OrderHeaderDbs { get; set; }
 
+		//Update
+		public DbSet<OrderUser> OrderUserDbs { get; set; }
 		#endregion DbSet
 	}
 }
