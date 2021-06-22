@@ -9,5 +9,6 @@ namespace Buyer.Mvc.Models
 	{
 		public string UserID { get; set; }
 		public string Password { get; set; }
+		public bool isLogin { get; set; }
 	}
 }

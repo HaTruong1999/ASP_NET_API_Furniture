@@ -114,6 +114,8 @@ namespace Buyer.Mvc.Controllers
 		}
 		public IActionResult Index()
 		{
+			userbuyer = HttpContext.Session.GetString("UserID").ToString();
+			TempData["UserID"] = userbuyer;
 			var model = (ListItemOrder, listSeason, listCategory);
 			return View(model);
 		}
