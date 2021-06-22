@@ -22,40 +22,35 @@ namespace Buyer.Mvc.Controllers
 		public string Password { get; set; } = "";
 		[BindProperty]
 		public string ErrPassword { get; set; } = "";
-		public bool enableErrBuyerUser { get; set; } = false;
-		public bool enableErrPassword { get; set; } = false;
-		public List<BuyerUser> ListBuyerUser { get; set; }
+		public List<OrderUser> ListOrderUser { get; set; }
 		private DatabaseContext Context { get; }
 		public LoginController(DatabaseContext _db)
 		{
 			Context = _db;
-			ListBuyerUser = Context.BuyerUserDbs.FromSqlRaw("dbo.[UserLogin] @p0", "ViewUser").ToList();
+			ListOrderUser = Context.OrderUserDbs.FromSqlRaw("dbo.[usp_UserLogin] @p0", "ViewListUser").ToList();
 		}
-		public IActionResult Index()
+		public IActionResult Index(string UserID, string ErrUserID, string Password, string ErrPassword)
 		{
-			var model = (ErrUserID, ErrPassword);
+			var model = (UserID,ErrUserID,Password, ErrPassword);
 			return View(model);
 		}
 
 		[HttpPost]
 		public IActionResult LoginToPage(string UserID, string Password)
 		{
-			foreach (BuyerUser buyerUser in ListBuyerUser)
+			foreach (OrderUser orderUser in ListOrderUser)
 			{
-				if (buyerUser.BuyerId.Trim().Equals(UserID.Trim()))
+				if (orderUser.UserID.Trim().Equals(UserID.Trim()))
 				{
-					if (buyerUser.Pass.Trim().Equals(Password.Trim()))
+					if (orderUser.Password.Trim().Equals(Password.Trim()))
 					{
-						HttpContext.Session.SetString("usercode", buyerUser.BuyerId.Trim());
-						HttpContext.Session.SetString("username", buyerUser.BuyerName.Trim());
+						HttpContext.Session.SetString("UserID", orderUser.UserID.Trim());
 						return LocalRedirect("~/Home/Index");
 					}
-					ErrPassword = "Incorreact password!";
-					return RedirectToAction("Index");
+					return RedirectToAction("Index", new { UserID = UserID, ErrUserID = "", Password = Password, ErrPassword = "Incorreact password!" });
 				}
 			}
-			ErrUserID = "User is not exist!";
-			return RedirectToAction("Index");
+			return RedirectToAction("Index", new { UserID = UserID, ErrUserID = "User is not exist!", Password = Password,  ErrPassword = "" }) ;
 		}
 	}
 }

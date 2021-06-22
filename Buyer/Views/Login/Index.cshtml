@@ -1,4 +1,4 @@
-﻿@model (string ErrUserID, string ErrPassword);
+﻿@model (string UserID, string ErrUserID, string Password, string ErrPassword);
 @{
     Layout = "_LayoutLogin";
     ViewData["Title"] = "Login page";
@@ -16,12 +16,12 @@
                 <form method="post">
                     <div class="form-group">
                         <label class="text-secondary">Username</label>
-                        <input name="UserID" class="form-control" type="text" required="">
-                        <span  class="text-danger">@Model.ErrUserID</span>
+                        <input asp-for="@Model.UserID" name="UserID" class="form-control" type="text" required="">
+                        <span class="text-danger">@Model.ErrUserID</span>
                     </div>
                     <div class="form-group">
                         <label class="text-secondary">Password</label>
-                        <input name="Password" class="form-control" type="password" required="">
+                        <input asp-for="@Model.Password" name="Password" class="form-control" type="password" required="">
                         <span class="text-danger">@Model.ErrPassword</span>
                     </div>
                     <button asp-action="LoginToPage" class="btn btn-info mt-2" type="submit">Log In</button>
