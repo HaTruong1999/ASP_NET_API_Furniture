@@ -30,6 +30,7 @@ namespace Buyer.Mvc.Controllers
 		{
 			Context = _db;
 			ListOrderUser = Context.OrderUserDbs.FromSqlRaw("dbo.[usp_UserLogin] @p0", "ViewListUser").ToList();
+
 		}
 		public IActionResult Index(string UserID, string ErrUserID, string Password, string ErrPassword)
 		{
