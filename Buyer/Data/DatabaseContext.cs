@@ -14,33 +14,22 @@ namespace Buyer.Data
 		}
 		protected override void OnModelCreating(ModelBuilder modelbuilder)
 		{
-			modelbuilder.Entity<Size>().HasNoKey();
-			modelbuilder.Entity<Color>().HasNoKey();
-			modelbuilder.Entity<ItemRegistration>().HasNoKey();
-			modelbuilder.Entity<ItemSample>().HasNoKey();
+			modelbuilder.Entity<OrderUser>().HasNoKey();
+			modelbuilder.Entity<ItemByCustomer>().HasNoKey();
+			modelbuilder.Entity<ItemSize>().HasNoKey();
+			modelbuilder.Entity<ItemColor>().HasNoKey();
 			modelbuilder.Entity<ItemCategory>().HasNoKey();
 			modelbuilder.Entity<ItemSeason>().HasNoKey();
-			modelbuilder.Entity<ItemFit>().HasNoKey();
-			modelbuilder.Entity<BuyerUser>().HasNoKey();
-
-			modelbuilder.Entity<OrderHeader>().HasNoKey();
-
-			//Update
-			modelbuilder.Entity<OrderUser>().HasNoKey();
 		}
 		#region DbSet
-		public DbSet<Size> SizeDbs { get; set; }
-		public DbSet<Color> ColorDbs { get; set; }
-		public DbSet<ItemRegistration> ItemRegistrationDbs { get; set; }
-		public DbSet<ItemSample> ItemSampleDbs { get; set; }
+
+		public DbSet<OrderUser> OrderUserDbs { get; set; }
+		public DbSet<ItemByCustomer> ItemByCustomerDbs { get; set; }
+		public DbSet<ItemColor> ItemColorDbs { get; set; }
+		public DbSet<ItemSize> ItemSizeDbs { get; set; }
 		public DbSet<ItemCategory> ItemCategoryDbs { get; set; }
 		public DbSet<ItemSeason> ItemSeasonDbs { get; set; }
-		public DbSet<ItemFit> ItemFitDbs { get; set; }
-		public DbSet<BuyerUser> BuyerUserDbs { get; set; }
-		public DbSet<OrderHeader> OrderHeaderDbs { get; set; }
 
-		//Update
-		public DbSet<OrderUser> OrderUserDbs { get; set; }
 		#endregion DbSet
 	}
 }

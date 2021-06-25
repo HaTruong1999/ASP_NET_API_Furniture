@@ -5,9 +5,10 @@ using System.Threading.Tasks;
 
 namespace Buyer.Mvc.Models
 {
-	public class ItemFit
+	public class ItemColor
 	{
-		public string FitCode { get; set; }
+		public string ColorCode { get; set; }
 		public string Description { get; set; }
+		public string URLColor { get; set; }
 	}
 }

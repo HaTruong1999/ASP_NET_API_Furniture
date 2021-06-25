@@ -5,10 +5,9 @@ using System.Threading.Tasks;
 
 namespace Buyer.Mvc.Models
 {
-	public class BuyerUser
+	public class ItemSize
 	{
-		public string BuyerId { get; set; }
-		public string BuyerName { get; set; }
-		public string Pass { get; set; }
+		public string SizeCode { get; set; }
+		public string Description { get; set; }
 	}
 }

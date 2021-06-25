@@ -37,7 +37,7 @@ namespace Buyer.Mvc.Controllers
             if (UserIDLogOut != "")
             {
 				HttpContext.Session.Remove("UserID");
-				Context.Database.ExecuteSqlRaw("dbo.[usp_UserLogin] @p0,@p1", "UserIsLogout", UserIDLogOut);
+				//Context.Database.ExecuteSqlRaw("dbo.[usp_UserLogin] @p0,@p1", "UserIsLogout", UserIDLogOut);
 			}
 			var model = (UserID,ErrUserID,Password, ErrPassword);
 			return View(model);
@@ -56,8 +56,9 @@ namespace Buyer.Mvc.Controllers
 					}
 					if (orderUser.Password.Trim().Equals(Password.Trim()))
 					{
-						HttpContext.Session.SetString("UserID", orderUser.UserID.Trim());
-						Context.Database.ExecuteSqlRaw("dbo.[usp_UserLogin] @p0,@p1", "UserIsLogin", orderUser.UserID.Trim());
+						HttpContext.Session.SetString("UserID", orderUser.UserID.Trim().ToString());
+						HttpContext.Session.SetString("CustID", orderUser.CustID.Trim().ToString());
+						//Context.Database.ExecuteSqlRaw("dbo.[usp_UserLogin] @p0,@p1", "UserIsLogin", orderUser.UserID.Trim());
 						return LocalRedirect("~/Home/Index");
 					}
 					return RedirectToAction("Index", new { UserID = UserID, ErrUserID = "", Password = Password, ErrPassword = "Incorreact password!" });
