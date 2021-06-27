@@ -51,16 +51,20 @@ namespace Buyer.Mvc.Controllers
 		}
 		public IActionResult Index()
 		{
-			UserID = HttpContext.Session.GetString("UserID").ToString();
-			CustID = HttpContext.Session.GetString("CustID").ToString();
-			if (UserID != null)
-			{
-				viewLists();
-				getListItemByCostomerToOrder();
-				var model = (ListItemByCoustomerOrder, listSeason, listCategory);
-				return View(model);
-			}else
-				return LocalRedirect("~/Login/Index");
+			viewLists();
+			getListItemByCostomerToOrder();
+			var model = (ListItemByCoustomerOrder, listSeason, listCategory);
+			return View(model);
+			//UserID = HttpContext.Session.GetString("UserID").ToString();
+			//CustID = HttpContext.Session.GetString("CustID").ToString();
+			//if (UserID != null)
+			//{
+			//	viewLists();
+			//	getListItemByCostomerToOrder();
+			//	var model = (ListItemByCoustomerOrder, listSeason, listCategory);
+			//	return View(model);
+			//}else
+			//	return LocalRedirect("~/Login/Index");
 
 		}
 	}

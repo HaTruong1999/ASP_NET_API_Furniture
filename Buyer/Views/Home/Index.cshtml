@@ -69,7 +69,7 @@
     </div>
 </div>
 
-<div class="presentacion">
+<div class="presentacion" style="padding: 0px;">
     <div class="logo">
         <img src="/image/logo-main.png" alt="">
     </div>
@@ -103,8 +103,8 @@
                 <div class="row">
                     <div class="col-md-4">
                         <div>
-                            @*<img src="http://192.168.169.240/images/products/@item.Picture.Trim()" style="max-width:100%" />*@
-                            <img src="http://192.168.169.240/images/products/@item.ItemByCustomer.URLPicture.Trim()" style="max-width:100%" />
+                            @*<img src="http://192.168.169.240/images/products/@item.ItemByCustomer.URLPicture.Trim()" style="max-width:100%" />*@
+                            <img src="~/image/product/sp1.jpg" style="max-width:100%" />
                         </div>
                     </div>
                     <div class="col-md-8">
@@ -112,7 +112,7 @@
                             <div class="price-box flex">
                                 <p class="price">@item.ItemByCustomer.Description - @String.Format(CultureInfo.InvariantCulture, "{0:0,0}", item.ItemByCustomer.FOBPrice) @item.ItemByCustomer.CurrencyCode</p>
                             </div>
-                            <div class="infor-detail" style="padding-left: 10px;padding-right: 10px">
+                            <div class="infor-detail">
                                 <div class="box-gray o1">
                                     <div class="inventory flex">
                                         <span>Item Code:</span>
@@ -123,10 +123,18 @@
                                         <span>Season:</span>
                                         <p>@item.ItemByCustomer.SeasonCode - @item.ItemByCustomer.SeasonName</p>
                                     </div>
+                                    <div class="product-code flex">
+                                        <span>Collection:</span>
+                                        <p>@item.ItemByCustomer.CollectionCode - @item.ItemByCustomer.CollectionName</p>
+                                    </div>
                                 </div>
                                 <div class="box-gray o2 ">
+                                    <div class="product-type flex">
+                                        <span>Form:</span>
+                                        <p>@item.ItemByCustomer.FormCode - @item.ItemByCustomer.FormName</p>
+                                    </div>
                                     <div class="producer flex">
-                                        <span>Proto Sample:</span>
+                                        <span>Pabric:</span>
                                         <p>@item.ItemByCustomer.Fabric</p>
                                     </div>
                                     <div class="product-type flex">
@@ -140,7 +148,7 @@
                                     <thead class="thead-dark">
                                         <tr>
                                             <th scope="col">Sample</th>
-                                            <th scope="col">Color Name and Code</th>
+                                            <th scope="col">Color</th>
                                             @foreach (var size in item.ListSize)
                                             {
                                                 <th scope="col">@size.SizeCode</th>
@@ -150,28 +158,34 @@
                                     <tbody>
                                         @foreach (var color in item.ListColor)
                                         {
-                                        <tr>
-                                            <td><img width="30" src="http://192.168.169.240/images/colors/@color.URLColor" /></td>
-                                            <td>@color.ColorCode - @color.Description</td>
-                                            @foreach (var size in item.ListSize)
-                                            {
-                                                <td>
-                                                    <div class="infor-detail-mount">
-                                                        <input value="0" class="infor-detail-mount-input" type="number">
-                                                    </div>
-                                                </td>
-                                            }
+                                            <tr>
+                                                @*<td><img width="30" src="http://192.168.169.240/images/colors/@color.URLColor" /></td>*@
+                                                <td><img width="30" src="~/image/color1.png" /></td>
+                                                <td>@color.ColorCode - @color.Description</td>
+                                                @foreach (var size in item.ListSize)
+                                                {
+                                                    <td>
+                                                        <div class="infor-detail-mount">
+                                                            <input value="0" class="infor-detail-mount-input input-amount-order" type="number">
+                                                        </div>
+                                                    </td>
+                                                }
 
-                                        </tr>
+                                            </tr>
                                         }
-                                        </tbody>
-                                    </table>
+                                    </tbody>
+                                </table>
                             </div>
-                            <div class="form-group">
-                                <label class="text-secondary">Enter your retail price:</label>
-                                <input style="max-width: 200px;" name="retailPrice" class="form-control InputRetaiPrice" type="number" required="">
+                            <div class="flex" style="justify-content: space-between">
+                                <div class="form-group flex">
+                                    <label class="mr-3" style="font-weight: 500;">Your Retail Price:</label>
+                                    <input style="margin-top: -5px; max-width: 150px; border: 1px solid #495057;" name="retailPrice" class="form-control InputRetaiPrice" type="number" required="">
+                                </div>
+                                <p style="font-weight: 500;">Amount: <span class="AmountAndPrice inputAmount">0</span></p>
+                                <p style="font-weight: 500;">Total Price: <span data-price="@item.ItemByCustomer.FOBPrice" data-currency="@item.ItemByCustomer.CurrencyCode.Trim()"  class="AmountAndPrice inputTotalPrice">0</span></p>
                             </div>
-                            <button type="submit" class="btn btn-primary mt-4 mr-5 btnConfirmAddItem">Confirm</button>
+                           
+                            <button type="submit" class="btn btn-primary mt-4 mr-5 btnConfirmAddItem">Add to Cart</button>
                         </div>
                     </div>
                 </div>
@@ -203,6 +217,29 @@
 @section Scripts{
     <script>
         $(function () {
+            //get amount and total value 
+            $(".input-amount-order").keyup(function (e) {
+                let countInput = Number($(this).parents('tbody').find('.input-amount-order').length);
+                let arrayVal = '';
+                let amount = 0;
+                for (let i = 0; i < countInput; i++) {
+                    arrayVal = arrayVal + $(this).parents('tbody').find('.input-amount-order').eq(i).val() + ',';
+                    amount = amount  + Number($(this).parents('tbody').find('.input-amount-order').eq(i).val());
+                }
+                $(this).parents('form').find('.inputAmount').empty();
+                $(this).parents('form').find('.inputAmount').append(amount);
+
+                let Price = Number($(this).parents('form').find('.inputTotalPrice').attr('data-price'));
+                let totalPrice = Price * amount;
+                let currency = ' ' + $(this).parents('form').find('.inputTotalPrice').attr('data-currency');
+
+                $(this).parents('form').find('.inputTotalPrice').empty();
+                $(this).parents('form').find('.inputTotalPrice').append(totalPrice.toLocaleString() + currency);
+                
+                console.log(amount);
+                console.log(arrayVal);
+            });
+
             $('#example').bootstrapTable('destroy').bootstrapTable({
                 toolbar: '.toolbar',
                 search: true,

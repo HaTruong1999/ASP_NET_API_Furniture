@@ -13,6 +13,8 @@ namespace Buyer.Mvc.Models
 		public string CategoryName { get; set; }
 		public string SeasonCode { get; set; }
 		public string SeasonName { get; set; }
+		public string CollectionCode { get; set; }
+		public string CollectionName { get; set; }
 		public string FormCode { get; set; }
 		public string FormName { get; set; }
 		public string Fabric { get; set; }

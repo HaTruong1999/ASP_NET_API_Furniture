@@ -15,19 +15,19 @@
     <div class="header-dark">
         <nav class="navbar navbar-dark navbar-expand-lg navigation-clean-search">
             <div class="container">
-                <a class="navbar-brand" href="~/Home/Index">Routine</a><button data-toggle="collapse"
-                                                                               class="navbar-toggler" data-target="#navcol-1">
+                <a class="navbar-brand" href="~/Home/Index">Routine</a>
+                <button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1">
                     <span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navcol-1">
-                    <ul class="nav navbar-nav">
+                    <ul class="nav navbar-nav mr-auto">
                         <li class="nav-item"><a class="nav-link" href="~/Home/Index">Home</a></li>
                     </ul>
-                    <form class="form-inline mr-auto" target="_self">
+                    @*<form class="form-inline mr-auto" target="_self">
                         <div class="form-group">
                             <label for="search-field"><i class="fa fa-search"></i></label><input class="form-control search-field" type="search" id="search-field" name="search">
                         </div>
-                    </form>
+                    </form>*@
                     <a class="btn btn-light action-button" role="button" href="~/Login/Index?UserIDLogOut=@TempData["UserID"]">Log Out</a>
                 </div>
             </div>
@@ -76,7 +76,7 @@
             <div class="footer-legal">
                 <div class="float-md-right region">
                     <a href="#">
-                        <img src="assets/img/united-states-flag.png">United
+                        <img src="">United
                         States
                     </a>
                 </div>
@@ -104,7 +104,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/jquery.dataTables.min.js"></script>
-    <script src="~/js/bootstrap-select.js"></script>
+    @*<script src="~/js/bootstrap-select.js"></script>*@
     <script src="~/js/dataTables.bootstrap4.min.js"></script>
     <script src="https://unpkg.com/bootstrap-table@1.18.2/dist/bootstrap-table.min.js"></script>
     <script src="https://unpkg.com/bootstrap-table@1.18.2/dist/extensions/fixed-columns/bootstrap-table-fixed-columns.min.js"></script>
