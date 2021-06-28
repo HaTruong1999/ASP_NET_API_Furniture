@@ -15,7 +15,7 @@
 
     <div class="nav_mobile">
         <label for="nav-mobile-input" class="nav_mobile_close">
-            <span class="btn btn-primary mb-2">Close</span>
+            <span class="btn btn-primary mb-2">Close</span> 
         </label>
         <form method="post">
             <div class="row">
@@ -25,7 +25,7 @@
                             <p style="margin-bottom: 3px;transform: translateX(-50%);" class="price">TOTAl ORDER</p>
                         </div>
                         <div class="infor-detail">
-                            <table class="table table-striped table-bordered table-sm infor-table">
+                            <table id="TotalOrder" class="table table-striped table-bordered table-sm infor-table">
                                 <thead class="thead-dark">
                                     <tr>
                                         <th scope="col">Item Code</th>
@@ -35,22 +35,22 @@
                                         <th scope="col">Total Price</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
+                                <tbody id="bodyTotalOrder">
+                                    @*<tr>
                                         <td>Item001</td>
                                         <td>205.000</td>
                                         <td>230.000</td>
                                         <td>240</td>
                                         <td>15.000.000</td>
-                                    </tr>
+                                    </tr>*@
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="TotalPrice">
-                <p style="margin-bottom: 0px; font-size: 20px; font-weight: 500">Total Price: 15.000.000 VNĐ</p>
+            <div class="TotalPrice" style="margin-left: 60%">
+                <p style="margin-bottom: 0px; font-size: 20px; font-weight: 500">Total Order: <span id="totalPriceOrder">0</span>  VNĐ</p>
             </div>
             <button type="submit" class="btn btn-primary mt-4 mr-5">Confirm</button>
         </form>
@@ -173,7 +173,11 @@
                                 <p style="font-weight: 500;">Total Price: <span data-price="@item.ItemByCustomer.FOBPrice" data-currency="@item.ItemByCustomer.CurrencyCode.Trim()"  class="AmountAndPrice inputTotalPrice">0</span></p>
                             </div>
                            
-                            <button type="submit" data-itemcode="@item.ItemByCustomer.ItemCode" class="btn btn-primary mt-4 mr-5 btnConfirmAddItem">Add to Cart</button>
+                            <div class="flex">
+                                <button type="submit" data-itemcode="@item.ItemByCustomer.ItemCode" class="btn btn-primary mt-4 btnConfirmAddItem">Add to Cart</button>
+                                <button style="margin-left: 50px" type="submit" class="btn btn-primary mt-4 mr-5 btnResetInput">Reset</button>
+                            </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -190,14 +194,14 @@
                 <h4 class="modal-title" id="addTargetLabel">Are you sure to add this item?</h4>
             </div>
             <div class="modal-body">
-                <form method="post">
-                    <input name="ItemCode" id="ItemCode" style="display: none">
-                    <input name="FOBPrice" id="FOBPrice" style="display: none">
-                    <input name="RetailPrice" id="RetailPrice" style="display: none">
-                    <input name="TotalAmount" id="TotalAmount" style="display: none">
-                    <input name="TotalPrice" id="TotalPrice" style="display: none">
+                <form>
+                    <input name="ItemCode" id="ItemCode" style="display: none" value="0">
+                    <input name="FOBPrice" id="FOBPrice" style="display: none" value="0">
+                    <input name="RetailPrice" id="RetailPrice" style="display: none" value="0">
+                    <input name="TotalAmount" id="TotalAmount" style="display: none" value="0">
+                    <input name="TotalPrice" id="TotalPrice" style="display: none" value="0">
                     @*<button asp-action="InsertItemOrder" class="btn btn-primary btn-sm">OK</button>*@
-                    <button class="btn btn-primary btn-sm btnAddItemToCart">OK</button>
+                    <button id="btnAddItemToCart" class="btn btn-primary btn-sm">OK</button>
                     <button id="btnCancelAddItem" type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Cancel</button>
                 </form>
             </div>
@@ -234,6 +238,15 @@
 @section Scripts{
     <script>
         $(function () {
+            //reset input lalue
+            $(".btnResetInput").click(function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $(this).parents('.infor-right').find('.input-amount-order').val(0);
+                $(this).parents('.infor-right').find('.inputAmount').empty().append('0');
+                $(this).parents('.infor-right').find('.inputTotalPrice').empty().append('0');
+                $(this).parents('.infor-right').find('.InputRetaiPrice').val(0);
+            });
             //get amount and total value 
             $(".input-amount-order").keyup(function (e) {
                 let countInput = Number($(this).parents('tbody').find('.input-amount-order').length);
@@ -251,7 +264,7 @@
                 let currency = ' ' + $(this).parents('form').find('.inputTotalPrice').attr('data-currency');
 
                 $(this).parents('form').find('.inputTotalPrice').empty();
-                $(this).parents('form').find('.inputTotalPrice').append(totalPrice.toLocaleString() + currency);
+                $(this).parents('form').find('.inputTotalPrice').append(totalPrice.toLocaleString());
             });
 
             $('#example').bootstrapTable('destroy').bootstrapTable({
@@ -272,7 +285,7 @@
 
                 if (retailPrice > 0) {
                     let ItemCode = $(this).attr('data-itemcode');
-                    console.log(ItemCode);
+                    
                     let countInput = Number($(this).parents('.infor-right').find('.input-amount-order').length);
                     let arrayVal = '';
                     for (let i = 0; i < countInput; i++) {
@@ -283,7 +296,19 @@
                             arrayVal = arrayVal + ItemCode + ',' + color + ',' + size + ',' + quantity + ',';
                     }
 
-                    console.log(arrayVal);
+                    //console.log(arrayVal);
+
+                    let FOBPrice = Number($(this).parents('.infor-right').find('.inputTotalPrice').attr('data-price')); 
+                    let totalAmount = Number($(this).parents('.infor-right').find('.inputAmount').text());
+                    let totalPrice = $(this).parents('.infor-right').find('.inputTotalPrice').text();
+
+                    //console.log(ItemCode + ' ' + FOBPrice + ' ' + retailPrice + ' ' + totalAmount + ' ' + totalPrice);
+
+                    $("#ItemCode").val(ItemCode);
+                    $("#FOBPrice").val(FOBPrice);
+                    $("#RetailPrice").val(retailPrice);
+                    $("#TotalAmount").val(totalAmount);
+                    $("#TotalPrice").val(totalPrice);
 
                     $("#confirmAddItem").fadeIn(300);
 
@@ -294,8 +319,41 @@
             $("#btnAddItemToCart").click(function (e) {
                 e.preventDefault();
                 e.stopPropagation();
-                //let ItemCode = 
+                let ItemCode = $("#ItemCode").val();
+                let FOBPrice = $("#FOBPrice").val();
+                let RetailPrice = $("#RetailPrice").val();
+                let TotalAmount = $("#TotalAmount").val();
+                let TotalPrice = $("#TotalPrice").val(); 
+
+                $(`<tr>
+                    <td>${ItemCode}</td>
+                    <td>${FOBPrice}</td>
+                    <td>${RetailPrice}</td>
+                    <td>${TotalAmount}</td>
+                    <td class="totalPriceEachItem">${TotalPrice}</td>
+                </tr>`).appendTo('#bodyTotalOrder');
+
+                //reset input
+                $('.input-amount-order').val(0);
+                $('.inputAmount').empty().append('0');
+                $('.inputTotalPrice').empty().append('0');
+                $('.InputRetaiPrice').val(0);
+
+                //count totalPriceOrder 
+                let dem = Number($(".TotalOrder .totalPriceEachItem").length);
+                let totalPriceOrder = 0;
+                for (let i = 0; i < dem; i++) {
+                    let tempPrice = Number($(".TotalOrder .totalPriceEachItem").eq(i)[0].innerHTML.split('.').join(''));
+                    console.log(tempPrice);
+                    totalPriceOrder = totalPriceOrder + tempPrice;
+                }
+
+                $(".TotalOrder #totalPriceOrder").empty();
+                $(".TotalOrder #totalPriceOrder").append(totalPriceOrder.toLocaleString());
+
+                $("#confirmAddItem").fadeOut(300);
                 $("#successNotification").fadeIn(300);
+
             });
 
             $("#btnCancelAddItem").click(function (e) {
