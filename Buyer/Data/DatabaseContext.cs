@@ -20,6 +20,7 @@ namespace Buyer.Data
 			modelbuilder.Entity<ItemColor>().HasNoKey();
 			modelbuilder.Entity<ItemCategory>().HasNoKey();
 			modelbuilder.Entity<ItemSeason>().HasNoKey();
+			modelbuilder.Entity<ColorAndSizeByItem>().HasNoKey();
 		}
 		#region DbSet
 
@@ -29,6 +30,7 @@ namespace Buyer.Data
 		public DbSet<ItemSize> ItemSizeDbs { get; set; }
 		public DbSet<ItemCategory> ItemCategoryDbs { get; set; }
 		public DbSet<ItemSeason> ItemSeasonDbs { get; set; }
+		public DbSet<ColorAndSizeByItem> ColorAndSizeByItemDbs { get; set; }
 
 		#endregion DbSet
 	}

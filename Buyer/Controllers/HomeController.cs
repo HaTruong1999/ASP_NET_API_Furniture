@@ -45,18 +45,20 @@ namespace Buyer.Mvc.Controllers
 				itemByCustomerOrder.ItemByCustomer = itemByCustomer;
 				itemByCustomerOrder.ListColor = Context.ItemColorDbs.FromSqlRaw("dbo.[usp_Variant_Item] @p0, @p1", "ViewColorByItem" , itemByCustomer.ItemCode.Trim()).ToList();
 				itemByCustomerOrder.ListSize = Context.ItemSizeDbs.FromSqlRaw("dbo.[usp_Variant_Item] @p0, @p1", "ViewSizeByItem", itemByCustomer.ItemCode.Trim()).ToList();
+				itemByCustomerOrder.ListColorAndSizeByItem = Context.ColorAndSizeByItemDbs.FromSqlRaw("dbo.[usp_Order_Cart] @p0, @p1, @p2, @p3, @p4", "QuatityByItemSizeColor", "" , CustID , 1 , itemByCustomer.ItemCode.Trim()).ToList();
 
 				ListItemByCoustomerOrder.Add(itemByCustomerOrder);
 			}
 		}
 		public IActionResult Index()
 		{
+			UserID = HttpContext.Session.GetString("UserID").ToString();
+			CustID = HttpContext.Session.GetString("CustID").ToString();
 			viewLists();
 			getListItemByCostomerToOrder();
 			var model = (ListItemByCoustomerOrder, listSeason, listCategory);
 			return View(model);
-			//UserID = HttpContext.Session.GetString("UserID").ToString();
-			//CustID = HttpContext.Session.GetString("CustID").ToString();
+			
 			//if (UserID != null)
 			//{
 			//	viewLists();

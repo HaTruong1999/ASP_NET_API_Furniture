@@ -31,18 +31,12 @@
                                         <th scope="col">Item Code</th>
                                         <th scope="col">FOBPrice</th>
                                         <th scope="col">Your Retail Price</th>
-                                        <th scope="col">Amount</th>
+                                        <th scope="col">Quatity</th>
                                         <th scope="col">Total Price</th>
                                     </tr>
                                 </thead>
                                 <tbody id="bodyTotalOrder">
-                                    @*<tr>
-                                        <td>Item001</td>
-                                        <td>205.000</td>
-                                        <td>230.000</td>
-                                        <td>240</td>
-                                        <td>15.000.000</td>
-                                    </tr>*@
+                                    
                                 </tbody>
                             </table>
                         </div>
@@ -154,7 +148,7 @@
                                                 {
                                                     <td>
                                                         <div class="infor-detail-mount">
-                                                            <input data-size="@size.SizeCode" data-color="@color.ColorCode" value="0" class="infor-detail-mount-input input-amount-order" type="number">
+                                                            <input data-size="@size.SizeCode" data-color="@color.ColorCode" value="@item.GetQuatityByVariant(color.ColorCode,size.SizeCode)" class="infor-detail-mount-input input-amount-order" type="number">
                                                         </div>
                                                     </td>
                                                 }
@@ -302,8 +296,6 @@
                     let totalAmount = Number($(this).parents('.infor-right').find('.inputAmount').text());
                     let totalPrice = $(this).parents('.infor-right').find('.inputTotalPrice').text();
 
-                    //console.log(ItemCode + ' ' + FOBPrice + ' ' + retailPrice + ' ' + totalAmount + ' ' + totalPrice);
-
                     $("#ItemCode").val(ItemCode);
                     $("#FOBPrice").val(FOBPrice);
                     $("#RetailPrice").val(retailPrice);
@@ -344,12 +336,11 @@
                 let totalPriceOrder = 0;
                 for (let i = 0; i < dem; i++) {
                     let tempPrice = Number($(".TotalOrder .totalPriceEachItem").eq(i)[0].innerHTML.split('.').join(''));
-                    console.log(tempPrice);
                     totalPriceOrder = totalPriceOrder + tempPrice;
                 }
-
-                $(".TotalOrder #totalPriceOrder").empty();
-                $(".TotalOrder #totalPriceOrder").append(totalPriceOrder.toLocaleString());
+                totalPriceOrder = totalPriceOrder.toLocaleString();
+                $(".TotalOrder #totalPriceOrder").empty();    
+                $(".TotalOrder #totalPriceOrder").append(totalPriceOrder);
 
                 $("#confirmAddItem").fadeOut(300);
                 $("#successNotification").fadeIn(300);
