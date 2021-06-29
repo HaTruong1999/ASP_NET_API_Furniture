@@ -1,4 +1,4 @@
-﻿@model (List<Buyer.Mvc.Models.ItemByCustomerOrder> ListItemByCustomerOrder, List<Buyer.Mvc.Models.ItemSeason> listSeason, List<Buyer.Mvc.Models.ItemCategory> listCategory)
+﻿@model (List<Buyer.Mvc.Models.ItemByCustomerOrder> ListItemByCustomerOrder, List<Buyer.Mvc.Models.CartDetail> ListCartDetail, List<Buyer.Mvc.Models.ItemSeason> listSeason, List<Buyer.Mvc.Models.PriceCurrency> listCurrency , List<Buyer.Mvc.Models.ItemCollection> listCollection , bool notifiOrderSuccess)
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -6,6 +6,7 @@
 
 @section CSS{
     <link rel="stylesheet" href="~/css/home.css" />
+    @*<link rel="stylesheet" href="~/css/bootstrap-select.css" />*@
 }
 
 <div class="TotalOrder">
@@ -29,14 +30,28 @@
                                 <thead class="thead-dark">
                                     <tr>
                                         <th scope="col">Item Code</th>
+                                        <th scope="col">Collection</th>
+                                        <th scope="col">Sample</th>
                                         <th scope="col">FOBPrice</th>
-                                        <th scope="col">Your Retail Price</th>
-                                        <th scope="col">Quatity</th>
+                                        <th scope="col">Retail Price</th>
+                                        <th scope="col">Quantity</th>
                                         <th scope="col">Total Price</th>
                                     </tr>
                                 </thead>
                                 <tbody id="bodyTotalOrder">
-                                    
+                                    @foreach (var item in Model.ListCartDetail)
+                                    {
+                                    <tr>
+                                        <td>@item.ItemCode</td>
+                                        <td>@item.Collection</td>
+                                        <!--<th>-->@*<img src="http://192.168.169.240/images/products/@item.URLPicture.Trim()" width="30" />*@<!--</th>-->
+                                        <td><img width="30" src="~/image/product/sp1.jpg" /></td>
+                                        <td>@String.Format(CultureInfo.InvariantCulture, "{0:0,0}", item.FOBPrice)</td>
+                                        <td>@String.Format(CultureInfo.InvariantCulture, "{0:0,0}", item.RetailPrice)</td>
+                                        <td>@String.Format(CultureInfo.InvariantCulture, "{0:0,0}", item.Quantity)</td>
+                                        <td class="totalPriceEachItem">@String.Format(CultureInfo.InvariantCulture, "{0:0,0}", item.TotalAmount)</td>
+                                    </tr>
+                                    }
                                 </tbody>
                             </table>
                         </div>
@@ -46,7 +61,7 @@
             <div class="TotalPrice" style="margin-left: 60%">
                 <p style="margin-bottom: 0px; font-size: 20px; font-weight: 500">Total Order: <span id="totalPriceOrder">0</span>  VNĐ</p>
             </div>
-            <button type="submit" class="btn btn-primary mt-4 mr-5">Confirm</button>
+            <button type="submit" class="btn btn-primary mt-4 mr-5" id="btnConfirmOrder">Confirm</button>
         </form>
     </div>
 </div>
@@ -59,23 +74,31 @@
 
 <div class="filter">
     <form>
-        <select style="width: 300px">
+        <select class="filterItemOrder" style="width: 100px" id="cbbGender">
+            <option value="">--choose gender--</option>
+            <option value="MAN">Man</option>
+            <option value="WOMEN">Women</option>
+            <option value="OTHER">Other</option>
+        </select>
+
+        <select class="filterItemOrder" style="width: 300px" id="cbbSeason">
+            <option value="">--choose season--</option>
             @foreach (var item in Model.listSeason)
             {
                 <option value="@item.SeasonCode">@item.SeasonCode - @item.Description</option>
             }
         </select>
 
-        <select style="width: 300px">
-            @foreach (var item in Model.listCategory)
+        <select class="filterItemOrder" style="width: 300px" id="cbbCollection">
+            <option value="">--choose collection--</option>
+            @foreach (var item in Model.listCollection)
             {
-                <option value="@item.CategoryCode">@item.CategoryCode - @item.Description</option>
+                <option value="@item.CollectionCode">@item.CollectionCode - @item.Description</option>
             }
         </select>
 
     </form>
 </div>
-
 
 @foreach (var item in Model.ListItemByCustomerOrder)
 {
@@ -160,16 +183,25 @@
                             </div>
                             <div class="flex" style="justify-content: space-between">
                                 <div class="form-group flex">
-                                    <label class="mr-3" style="font-weight: 500;">Your Retail Price:</label>
-                                    <input style="margin-top: -5px; max-width: 150px; border: 1px solid #495057;" value="0" class="form-control InputRetaiPrice" type="number" >
+                                    <label class="mr-3" style="font-weight: 500;">Retail Price:</label>
+                                    <input style="margin-top: -5px; max-width: 120px; border: 1px solid #495057;" value="@item.ItemByCustomer.RetailPrice" class="form-control InputRetaiPrice" type="text">
                                 </div>
-                                <p style="font-weight: 500;">Amount: <span class="AmountAndPrice inputAmount">0</span></p>
-                                <p style="font-weight: 500;">Total Price: <span data-price="@item.ItemByCustomer.FOBPrice" data-currency="@item.ItemByCustomer.CurrencyCode.Trim()"  class="AmountAndPrice inputTotalPrice">0</span></p>
+                                <div class="form-group flex">
+                                    <label class="mr-3" style="font-weight: 500;">Currency:</label>
+                                    <select style="margin-top: -5px;" data-live-search="true" data-live-search-style="startsWith" class="selectpicker form-control cbbCurrency" data-hide-disabled="true">
+                                        @foreach (var c in Model.listCurrency)
+                                        {
+                                            <option value="@c.CurrencyCode">@c.CurrencyCode - @c.Description</option>
+                                        }
+                                    </select>
+
+                                </div>
+                                <p style="font-weight: 500;">Amount: <span class="AmountAndPrice inputAmount">@item.ItemByCustomer.Quantity</span></p>
+                                <p style="font-weight: 500;">Total Price: <span data-price="@item.ItemByCustomer.FOBPrice" data-currency="@item.ItemByCustomer.CurrencyCode.Trim()" class="AmountAndPrice inputTotalPrice">@String.Format(CultureInfo.InvariantCulture, "{0:0,0}", item.ItemByCustomer.TotalAmount)</span></p>
                             </div>
                            
                             <div class="flex">
                                 <button type="submit" data-itemcode="@item.ItemByCustomer.ItemCode" class="btn btn-primary mt-4 btnConfirmAddItem">Add to Cart</button>
-                                <button style="margin-left: 50px" type="submit" class="btn btn-primary mt-4 mr-5 btnResetInput">Reset</button>
                             </div>
                             
                         </div>
@@ -180,7 +212,6 @@
     </section>
 }
 
-
 <div class="modal" id="confirmAddItem" style="background-color: rgb(79 77 77 / 30%);">
     <div class="modal-dialog">
         <div class="modal-content" style="margin-top: 50%;">
@@ -188,14 +219,14 @@
                 <h4 class="modal-title" id="addTargetLabel">Are you sure to add this item?</h4>
             </div>
             <div class="modal-body">
-                <form>
+                <form method="post">
                     <input name="ItemCode" id="ItemCode" style="display: none" value="0">
                     <input name="FOBPrice" id="FOBPrice" style="display: none" value="0">
+                    <input name="Currency" id="Currency" style="display: none" value="0">
                     <input name="RetailPrice" id="RetailPrice" style="display: none" value="0">
-                    <input name="TotalAmount" id="TotalAmount" style="display: none" value="0">
-                    <input name="TotalPrice" id="TotalPrice" style="display: none" value="0">
-                    @*<button asp-action="InsertItemOrder" class="btn btn-primary btn-sm">OK</button>*@
-                    <button id="btnAddItemToCart" class="btn btn-primary btn-sm">OK</button>
+                    <input name="RetailCurrency" id="RetailCurrency" style="display: none" value="0">
+                    <input name="arrayVariant" id="arrayVariant" style="display: none" value="0">
+                    <button id="btnAddItemToCart" asp-action="InsertItemOrderToCart" class="btn btn-primary btn-sm">OK</button>
                     <button id="btnCancelAddItem" type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Cancel</button>
                 </form>
             </div>
@@ -220,10 +251,39 @@
     <div class="modal-dialog">
         <div class="modal-content" style="margin-top: 50%;">
             <div class="modal-header">
-                <h4 class="modal-title" id="addTargetLabel">Add cart successfully!</h4>
+                <h4 class="modal-title" id="addTargetLabel">Successfully!</h4>
+            </div>
+            @*<div class="modal-body">
+                <button id="closeSuccessNotification" type="button" class="btn btn-primary btn-sm" data-dismiss="modal">Ok</button>
+            </div>*@
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="confirmOrder" style="background-color: rgb(79 77 77 / 30%);">
+    <div class="modal-dialog">
+        <div class="modal-content" style="margin-top: 50%;">
+            <div class="modal-header">
+                <h4 class="modal-title" id="addTargetLabel">Are you sure to confirm this order?</h4>
             </div>
             <div class="modal-body">
-                <button id="closeSuccessNotification" type="button" class="btn btn-primary btn-sm" data-dismiss="modal">Ok</button>
+                <form method="post">
+                    <button id="btnConfirmOrder" asp-action="InsertOrder" class="btn btn-primary btn-sm">OK</button>
+                    <button id="btnCancelOrder" type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Cancel</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="successNotificationOrder" style="display: @(Model.notifiOrderSuccess? "block" : "none");background-color: rgb(79 77 77 / 30%);">
+    <div class="modal-dialog">
+        <div class="modal-content" style="margin-top: 50%;">
+            <div class="modal-header">
+                <h4 class="modal-title" id="addTargetLabel">The order has been confirmed, go to purchase history to see details !</h4>
+            </div>
+            <div class="modal-body">
+                <button id="closeSuccessNotificationOrder" type="button" class="btn btn-primary btn-sm" data-dismiss="modal">Ok</button>
             </div>
         </div>
     </div>
@@ -232,16 +292,16 @@
 @section Scripts{
     <script>
         $(function () {
-            //reset input lalue
-            $(".btnResetInput").click(function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-                $(this).parents('.infor-right').find('.input-amount-order').val(0);
-                $(this).parents('.infor-right').find('.inputAmount').empty().append('0');
-                $(this).parents('.infor-right').find('.inputTotalPrice').empty().append('0');
-                $(this).parents('.infor-right').find('.InputRetaiPrice').val(0);
+            $(".filterItemOrder").on("change", function () {
+                var Gender = $("#cbbGender").val();
+                var Season = $("#cbbSeason").val();
+                var Collection = $("#cbbCollection").val();
+                /*console.log(Gender + ',' + Season + '' + Collection);*/
+                $.ajax(`/home/filteritem?gender=${gender}&season=${season}&collection=${collection}`);
             });
-            //get amount and total value 
+
+            //get amount and total value
+
             $(".input-amount-order").keyup(function (e) {
                 let countInput = Number($(this).parents('tbody').find('.input-amount-order').length);
                 let arrayVal = '';
@@ -255,7 +315,6 @@
 
                 let Price = Number($(this).parents('form').find('.inputTotalPrice').attr('data-price'));
                 let totalPrice = Price * amount;
-                let currency = ' ' + $(this).parents('form').find('.inputTotalPrice').attr('data-currency');
 
                 $(this).parents('form').find('.inputTotalPrice').empty();
                 $(this).parents('form').find('.inputTotalPrice').append(totalPrice.toLocaleString());
@@ -275,76 +334,59 @@
                 e.preventDefault();
                 e.stopPropagation();
 
-                let retailPrice = Number($(this).parents('.infor-right').find('.InputRetaiPrice').val());
+                let retailPrice = $(this).parents('.infor-right').find('.InputRetaiPrice').val();
 
-                if (retailPrice > 0) {
+                if (retailPrice.length > 0 ) {
                     let ItemCode = $(this).attr('data-itemcode');
-                    
+
                     let countInput = Number($(this).parents('.infor-right').find('.input-amount-order').length);
-                    let arrayVal = '';
+                    let arrayVariant = '';
                     for (let i = 0; i < countInput; i++) {
                         let color = $(this).parents('.infor-right').find('.input-amount-order').eq(i).attr('data-color');
                         let size = $(this).parents('.infor-right').find('.input-amount-order').eq(i).attr('data-size');
                         let quantity = Number($(this).parents('.infor-right').find('.input-amount-order').eq(i).val());
                         if (quantity > 0)
-                            arrayVal = arrayVal + ItemCode + ',' + color + ',' + size + ',' + quantity + ',';
+                            arrayVariant = arrayVariant + color + ',' + size + ',' + quantity + ',';
                     }
 
-                    //console.log(arrayVal);
-
-                    let FOBPrice = Number($(this).parents('.infor-right').find('.inputTotalPrice').attr('data-price')); 
-                    let totalAmount = Number($(this).parents('.infor-right').find('.inputAmount').text());
-                    let totalPrice = $(this).parents('.infor-right').find('.inputTotalPrice').text();
+                    let FOBPrice = Number($(this).parents('.infor-right').find('.inputTotalPrice').attr('data-price'));
+                    let Currency = $(this).parents('.infor-right').find('.inputTotalPrice').attr('data-currency');
+                    let RetailCurrency = $(this).parents('.infor-right').find('.cbbCurrency').val();
 
                     $("#ItemCode").val(ItemCode);
                     $("#FOBPrice").val(FOBPrice);
+                    $("#Currency").val(Currency);
                     $("#RetailPrice").val(retailPrice);
-                    $("#TotalAmount").val(totalAmount);
-                    $("#TotalPrice").val(totalPrice);
+                    $("#RetailCurrency").val(RetailCurrency);
+                    $("#arrayVariant").val(arrayVariant);
 
                     $("#confirmAddItem").fadeIn(300);
 
                 } else
-                    $("#errAddToCart").fadeIn(300);          
+                    $("#errAddToCart").fadeIn(300);
             });
 
-            $("#btnAddItemToCart").click(function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-                let ItemCode = $("#ItemCode").val();
-                let FOBPrice = $("#FOBPrice").val();
-                let RetailPrice = $("#RetailPrice").val();
-                let TotalAmount = $("#TotalAmount").val();
-                let TotalPrice = $("#TotalPrice").val(); 
-
-                $(`<tr>
-                    <td>${ItemCode}</td>
-                    <td>${FOBPrice}</td>
-                    <td>${RetailPrice}</td>
-                    <td>${TotalAmount}</td>
-                    <td class="totalPriceEachItem">${TotalPrice}</td>
-                </tr>`).appendTo('#bodyTotalOrder');
-
-                //reset input
-                $('.input-amount-order').val(0);
-                $('.inputAmount').empty().append('0');
-                $('.inputTotalPrice').empty().append('0');
-                $('.InputRetaiPrice').val(0);
-
-                //count totalPriceOrder 
-                let dem = Number($(".TotalOrder .totalPriceEachItem").length);
+            //count totalPriceOrder
+            let dem = Number($(".TotalOrder .totalPriceEachItem").length);
+            console.log(dem);
+            if (dem > 0) {
                 let totalPriceOrder = 0;
                 for (let i = 0; i < dem; i++) {
-                    let tempPrice = Number($(".TotalOrder .totalPriceEachItem").eq(i)[0].innerHTML.split('.').join(''));
+                    let tempPrice = Number($(".TotalOrder .totalPriceEachItem").eq(i)[0].innerHTML.split(',').join(''));
+                    console.log(tempPrice);
                     totalPriceOrder = totalPriceOrder + tempPrice;
                 }
                 totalPriceOrder = totalPriceOrder.toLocaleString();
-                $(".TotalOrder #totalPriceOrder").empty();    
+                $(".TotalOrder #totalPriceOrder").empty();
                 $(".TotalOrder #totalPriceOrder").append(totalPriceOrder);
+            } else {
+                $(".TotalOrder #totalPriceOrder").empty();
+                $(".TotalOrder #totalPriceOrder").append('0');
+            }
 
+            $("#btnAddItemToCart").click(function (e) {
                 $("#confirmAddItem").fadeOut(300);
                 $("#successNotification").fadeIn(300);
-
             });
 
             $("#btnCancelAddItem").click(function (e) {
@@ -364,7 +406,25 @@
                 e.stopPropagation();
                 $("#successNotification").fadeOut(300);
             });
-            
+
+            $("#closeSuccessNotificationOrder").click(function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $("#successNotificationOrder").fadeOut(300);
+            });
+
+            $("#btnConfirmOrder").click(function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $("#confirmOrder").fadeIn(300);
+            });
+
+            $("#btnCancelOrder").click(function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $("#confirmOrder").fadeOut(300);
+            });
+
         });
     </script>
 }

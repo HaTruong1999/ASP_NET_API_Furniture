@@ -21,6 +21,9 @@ namespace Buyer.Data
 			modelbuilder.Entity<ItemCategory>().HasNoKey();
 			modelbuilder.Entity<ItemSeason>().HasNoKey();
 			modelbuilder.Entity<ColorAndSizeByItem>().HasNoKey();
+			modelbuilder.Entity<PriceCurrency>().HasNoKey();
+			modelbuilder.Entity<CartDetail>().HasNoKey();
+			modelbuilder.Entity<ItemCollection>().HasNoKey();
 		}
 		#region DbSet
 
@@ -31,6 +34,9 @@ namespace Buyer.Data
 		public DbSet<ItemCategory> ItemCategoryDbs { get; set; }
 		public DbSet<ItemSeason> ItemSeasonDbs { get; set; }
 		public DbSet<ColorAndSizeByItem> ColorAndSizeByItemDbs { get; set; }
+		public DbSet<PriceCurrency> PriceCurrencyDbs { get; set; }
+		public DbSet<CartDetail> CartDetailDbs { get; set; }
+		public DbSet<ItemCollection> ItemCollectionDbs { get; set; }
 
 		#endregion DbSet
 	}
