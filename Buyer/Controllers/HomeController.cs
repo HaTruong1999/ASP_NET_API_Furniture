@@ -38,12 +38,6 @@ namespace Buyer.Mvc.Controllers
 
 		public void viewLists(string Gender, string Season, string Collection)
 		{
-			if (string.IsNullOrEmpty(Gender))
-				Gender = "%";
-			if (string.IsNullOrEmpty(Season))
-				Season = "%";
-			if (string.IsNullOrEmpty(Collection))
-				Collection = "%";
 			listSeason = Context.ItemSeasonDbs.FromSqlRaw("dbo.[usp_Item] @p0", "ViewSeason").ToList();
 			listCollection = Context.ItemCollectionDbs.FromSqlRaw("dbo.[usp_Item] @p0", "ViewAllCollection").ToList();
 			listCurrency = Context.PriceCurrencyDbs.FromSqlRaw("dbo.[usp_Currency] @p0", "ViewCurrency").ToList();
@@ -67,11 +61,17 @@ namespace Buyer.Mvc.Controllers
 		}
 		public IActionResult Index(bool notifiOrderSuccess, string Gender, string Season, string Collection)
 		{
+			if (string.IsNullOrEmpty(Gender))
+				Gender = "%";
+			if (string.IsNullOrEmpty(Season))
+				Season = "%";
+			if (string.IsNullOrEmpty(Collection))
+				Collection = "%";
 			UserID = HttpContext.Session.GetString("UserID").ToString();
 			CustID = HttpContext.Session.GetString("CustID").ToString();
 			viewLists(Gender, Season, Collection);
 			getListItemByCustomerToOrder();
-			var model = (ListItemByCoustomerOrder, ListCartDetail, listSeason, listCurrency, listCollection ,notifiOrderSuccess);
+			var model = (ListItemByCoustomerOrder, ListCartDetail, listSeason, listCurrency, listCollection ,notifiOrderSuccess, Gender , Season, Collection);
 			return View(model);
 		}
 

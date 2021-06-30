@@ -1,4 +1,4 @@
-﻿@model (List<Buyer.Mvc.Models.ItemByCustomerOrder> ListItemByCustomerOrder, List<Buyer.Mvc.Models.CartDetail> ListCartDetail, List<Buyer.Mvc.Models.ItemSeason> listSeason, List<Buyer.Mvc.Models.PriceCurrency> listCurrency , List<Buyer.Mvc.Models.ItemCollection> listCollection , bool notifiOrderSuccess)
+﻿@model (List<Buyer.Mvc.Models.ItemByCustomerOrder> ListItemByCustomerOrder, List<Buyer.Mvc.Models.CartDetail> ListCartDetail, List<Buyer.Mvc.Models.ItemSeason> listSeason, List<Buyer.Mvc.Models.PriceCurrency> listCurrency, List<Buyer.Mvc.Models.ItemCollection> listCollection, bool notifiOrderSuccess, string Gender, string Season, string Collection)
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -12,11 +12,11 @@
 <div class="TotalOrder">
     <label for="nav-mobile-input" class="nav_bars-btn"><span>Total Cart</span></label>
     <input type="checkbox" hidden class="nav_input" id="nav-mobile-input">
-    <label for="nav-mobile-input" class="nav_overlay" ></label>
+    <label for="nav-mobile-input" class="nav_overlay"></label>
 
     <div class="nav_mobile">
         <label for="nav-mobile-input" class="nav_mobile_close">
-            <span class="btn btn-primary mb-2">Close</span> 
+            <span class="btn btn-primary mb-2">Close</span>
         </label>
         <form method="post">
             <div class="row">
@@ -41,16 +41,16 @@
                                 <tbody id="bodyTotalOrder">
                                     @foreach (var item in Model.ListCartDetail)
                                     {
-                                    <tr>
-                                        <td>@item.ItemCode</td>
-                                        <td>@item.Collection</td>
-                                        <!--<th>-->@*<img src="http://192.168.169.240/images/products/@item.URLPicture.Trim()" width="30" />*@<!--</th>-->
-                                        <td><img width="30" src="~/image/product/sp1.jpg" /></td>
-                                        <td>@String.Format(CultureInfo.InvariantCulture, "{0:0,0}", item.FOBPrice)</td>
-                                        <td>@String.Format(CultureInfo.InvariantCulture, "{0:0,0}", item.RetailPrice)</td>
-                                        <td>@String.Format(CultureInfo.InvariantCulture, "{0:0,0}", item.Quantity)</td>
-                                        <td class="totalPriceEachItem">@String.Format(CultureInfo.InvariantCulture, "{0:0,0}", item.TotalAmount)</td>
-                                    </tr>
+                                        <tr>
+                                            <td>@item.ItemCode</td>
+                                            <td>@item.Collection</td>
+                                            <th><img src="http://192.168.169.240/images/products/@item.URLPicture.Trim()" width="30" /></th>
+                                            @*<td><img width="30" src="~/image/product/sp1.jpg" /></td>*@
+                                            <td>@String.Format(CultureInfo.InvariantCulture, "{0:0,0}", item.FOBPrice)</td>
+                                            <td>@String.Format(CultureInfo.InvariantCulture, "{0:0,0}", item.RetailPrice)</td>
+                                            <td>@String.Format(CultureInfo.InvariantCulture, "{0:0,0}", item.Quantity)</td>
+                                            <td class="totalPriceEachItem">@String.Format(CultureInfo.InvariantCulture, "{0:0,0}", item.TotalAmount)</td>
+                                        </tr>
                                     }
                                 </tbody>
                             </table>
@@ -74,26 +74,26 @@
 
 <div class="filter">
     <form>
-        <select class="filterItemOrder" style="width: 100px" id="cbbGender">
-            <option value="">--choose gender--</option>
-            <option value="MAN">Man</option>
-            <option value="WOMEN">Women</option>
-            <option value="OTHER">Other</option>
+        <select class="filterItemOrder" style="width: 300px" id="cbbGender">
+            <option selected="@Model.Gender.Equals("%")" value="%">-- All Gender --</option>
+            <option selected="@Model.Gender.Equals("MAN")" value="MAN">Man</option>
+            <option selected="@Model.Gender.Equals("WOMEN")" value="WOMEN">Women</option>
+            <option selected="@Model.Gender.Equals("OTHER")" value="OTHER">Other</option>
         </select>
 
-        <select class="filterItemOrder" style="width: 300px" id="cbbSeason">
-            <option value="">--choose season--</option>
+        <select class="filterItemOrder" style="width: 300px" id="cbbSeason">   
+            <option selected="@Model.Season.Equals("%")" value="%">-- All Season --</option>
             @foreach (var item in Model.listSeason)
             {
-                <option value="@item.SeasonCode">@item.SeasonCode - @item.Description</option>
+                <option selected="@Model.Season.Equals(item.SeasonCode)" value="@item.SeasonCode">@item.SeasonCode - @item.Description</option>
             }
         </select>
 
         <select class="filterItemOrder" style="width: 300px" id="cbbCollection">
-            <option value="">--choose collection--</option>
+            <option selected="@Model.Collection.Equals("%")" value="%">-- All Collection --</option>
             @foreach (var item in Model.listCollection)
             {
-                <option value="@item.CollectionCode">@item.CollectionCode - @item.Description</option>
+                <option selected="@Model.Collection.Equals(item.CollectionCode)" value="@item.CollectionCode">@item.CollectionCode - @item.Description</option>
             }
         </select>
 
@@ -108,8 +108,8 @@
                 <div class="row">
                     <div class="col-md-4">
                         <div>
-                            @*<img src="http://192.168.169.240/images/products/@item.ItemByCustomer.URLPicture.Trim()" style="max-width:100%" />*@
-                            <img src="~/image/product/sp1.jpg" style="max-width:100%" />
+                            <img src="http://192.168.169.240/images/products/@item.ItemByCustomer.URLPicture.Trim()" style="max-width:100%" />
+                            @*<img src="~/image/product/sp1.jpg" style="max-width:100%" />*@
                         </div>
                     </div>
                     <div class="col-md-8">
@@ -164,8 +164,8 @@
                                         @foreach (var color in item.ListColor)
                                         {
                                             <tr>
-                                                @*<td><img width="30" src="http://192.168.169.240/images/colors/@color.URLColor" /></td>*@
-                                                <td><img width="30" src="~/image/color1.png" /></td>
+                                                <td><img width="30" src="http://192.168.169.240/images/colors/@color.URLColor" /></td>
+                                                @*<td><img width="30" src="~/image/color1.png" /></td>*@
                                                 <td>@color.ColorCode - @color.Description</td>
                                                 @foreach (var size in item.ListSize)
                                                 {
@@ -199,11 +199,11 @@
                                 <p style="font-weight: 500;">Amount: <span class="AmountAndPrice inputAmount">@item.ItemByCustomer.Quantity</span></p>
                                 <p style="font-weight: 500;">Total Price: <span data-price="@item.ItemByCustomer.FOBPrice" data-currency="@item.ItemByCustomer.CurrencyCode.Trim()" class="AmountAndPrice inputTotalPrice">@String.Format(CultureInfo.InvariantCulture, "{0:0,0}", item.ItemByCustomer.TotalAmount)</span></p>
                             </div>
-                           
+
                             <div class="flex">
                                 <button type="submit" data-itemcode="@item.ItemByCustomer.ItemCode" class="btn btn-primary mt-4 btnConfirmAddItem">Add to Cart</button>
                             </div>
-                            
+
                         </div>
                     </div>
                 </div>
@@ -253,9 +253,6 @@
             <div class="modal-header">
                 <h4 class="modal-title" id="addTargetLabel">Successfully!</h4>
             </div>
-            @*<div class="modal-body">
-                <button id="closeSuccessNotification" type="button" class="btn btn-primary btn-sm" data-dismiss="modal">Ok</button>
-            </div>*@
         </div>
     </div>
 </div>
@@ -268,13 +265,20 @@
             </div>
             <div class="modal-body">
                 <form method="post">
-                    <button id="btnConfirmOrder" asp-action="InsertOrder" class="btn btn-primary btn-sm">OK</button>
+                    <button asp-action="InsertOrder" class="btn btn-primary btn-sm">OK</button>
                     <button id="btnCancelOrder" type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Cancel</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+<form method="post" style="display: none">
+    <input name="Gender" id="Gender" style="display: none" value="0">
+    <input name="Season" id="Season" style="display: none" value="0">
+    <input name="Collection" id="Collection" style="display: none" value="0">
+    <button asp-action="FilterItem" class="btn btn-primary btn-sm" id="btnToCallFilterAction"></button>
+</form>
 
 <div class="modal" id="successNotificationOrder" style="display: @(Model.notifiOrderSuccess? "block" : "none");background-color: rgb(79 77 77 / 30%);">
     <div class="modal-dialog">
@@ -293,13 +297,12 @@
     <script>
         $(function () {
             $(".filterItemOrder").on("change", function () {
-                var Gender = $("#cbbGender").val();
-                var Season = $("#cbbSeason").val();
-                var Collection = $("#cbbCollection").val();
-                /*console.log(Gender + ',' + Season + '' + Collection);*/
-                $.ajax(`/home/filteritem?gender=${gender}&season=${season}&collection=${collection}`);
-            });
+                $("#Gender").val($("#cbbGender").val());
+                $("#Season").val($("#cbbSeason").val());
+                $("#Collection").val($("#cbbCollection").val());
 
+                $("#btnToCallFilterAction").click();
+            });
             //get amount and total value
 
             $(".input-amount-order").keyup(function (e) {
