@@ -10,7 +10,8 @@
 }
 
 <div class="TotalOrder">
-    <label for="nav-mobile-input" class="nav_bars-btn"><span>Total Cart</span></label>
+    <label for="nav-mobile-input" class="nav_bars-btn"><span><img width="50" src="~/image/cart-icon1.JPG" /></span></label>
+    <label class="nav_bars-btn" style="top:40%"><a href="~/History/Index"><img width="50" src="~/image/history-icon.png" /></a></label>
     <input type="checkbox" hidden class="nav_input" id="nav-mobile-input">
     <label for="nav-mobile-input" class="nav_overlay"></label>
 
@@ -41,16 +42,16 @@
                                 <tbody id="bodyTotalOrder">
                                     @foreach (var item in Model.ListCartDetail)
                                     {
-                                        <tr>
-                                            <td>@item.ItemCode</td>
-                                            <td>@item.Collection</td>
-                                            <th><img src="http://192.168.169.240/images/products/@item.URLPicture.Trim()" width="30" /></th>
-                                            @*<td><img width="30" src="~/image/product/sp1.jpg" /></td>*@
-                                            <td>@String.Format(CultureInfo.InvariantCulture, "{0:0,0}", item.FOBPrice)</td>
-                                            <td>@String.Format(CultureInfo.InvariantCulture, "{0:0,0}", item.RetailPrice)</td>
-                                            <td>@String.Format(CultureInfo.InvariantCulture, "{0:0,0}", item.Quantity)</td>
-                                            <td class="totalPriceEachItem">@String.Format(CultureInfo.InvariantCulture, "{0:0,0}", item.TotalAmount)</td>
-                                        </tr>
+                                    <tr>
+                                        <td>@item.ItemCode</td>
+                                        <td>@item.Collection</td>
+                                        @*<th><img src="http://192.168.169.240/images/products/@item.URLPicture.Trim()" width="30" /></th>*@
+                                        <td><img width="30" src="~/image/product/sp1.jpg" /></td>
+                                        <td>@String.Format(CultureInfo.InvariantCulture, "{0:0,0}", item.FOBPrice)</td>
+                                        <td>@String.Format(CultureInfo.InvariantCulture, "{0:0,0}", item.RetailPrice)</td>
+                                        <td>@String.Format(CultureInfo.InvariantCulture, "{0:0,0}", item.Quantity)</td>
+                                        <td class="totalPriceEachItem">@String.Format(CultureInfo.InvariantCulture, "{0:0,0}", item.TotalAmount)</td>
+                                    </tr>
                                     }
                                 </tbody>
                             </table>
@@ -76,7 +77,7 @@
     <form>
         <select class="filterItemOrder" style="width: 300px" id="cbbGender">
             <option selected="@Model.Gender.Equals("%")" value="%">-- All Gender --</option>
-            <option selected="@Model.Gender.Equals("MAN")" value="MAN">Man</option>
+            <option selected="@Model.Gender.Equals("MEN")" value="MEN">Man</option>
             <option selected="@Model.Gender.Equals("WOMEN")" value="WOMEN">Women</option>
             <option selected="@Model.Gender.Equals("OTHER")" value="OTHER">Other</option>
         </select>
@@ -108,8 +109,8 @@
                 <div class="row">
                     <div class="col-md-4">
                         <div>
-                            <img src="http://192.168.169.240/images/products/@item.ItemByCustomer.URLPicture.Trim()" style="max-width:100%" />
-                            @*<img src="~/image/product/sp1.jpg" style="max-width:100%" />*@
+                            @*<img src="http://192.168.169.240/images/products/@item.ItemByCustomer.URLPicture.Trim()" style="max-width:100%" />*@
+                            <img src="~/image/product/sp1.jpg" style="max-width:100%" />
                         </div>
                     </div>
                     <div class="col-md-8">
@@ -164,8 +165,8 @@
                                         @foreach (var color in item.ListColor)
                                         {
                                             <tr>
-                                                <td><img width="30" src="http://192.168.169.240/images/colors/@color.URLColor" /></td>
-                                                @*<td><img width="30" src="~/image/color1.png" /></td>*@
+                                                @*<td><img width="30" src="http://192.168.169.240/images/colors/@color.URLColor" /></td>*@
+                                                <td><img width="30" src="~/image/color1.png" /></td>
                                                 <td>@color.ColorCode - @color.Description</td>
                                                 @foreach (var size in item.ListSize)
                                                 {

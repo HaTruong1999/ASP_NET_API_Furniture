@@ -324,7 +324,7 @@ tr {
     box-shadow: -4px 4px 2px 2px grey;
     border-radius: 7px;
     border: 1px solid;
-    padding: 10px 15px;
+    padding: 0px 5px;
 }
 
 .nav_mobile_close {

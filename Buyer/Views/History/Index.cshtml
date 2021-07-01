@@ -1,0 +1,194 @@
+﻿@model (List<Buyer.Mvc.Models.OrderHeader> ListOrderHeader, List<Buyer.Mvc.Models.OrderLine> ListOrderLine, int OrderID)
+@{
+    ViewData["Title"] = "Home Page";
+}
+@using System.Globalization;
+
+@section CSS{
+    <link rel="stylesheet" href="~/css/home.css" />
+    @*<link rel="stylesheet" href="~/css/bootstrap-select.css" />*@
+}
+<div class="presentacion" style="padding: 0px;">
+    <div class="logo">
+        <img src="/image/logo-main.png" alt="">
+    </div>
+</div>
+
+<section>
+    <div class="container1" style="padding: 30px; margin-top: 10px; margin-bottom: 20px">
+        <form>
+            <div class="title" style="text-align: center; font-size: 25px; font-weight: bold;"><p>History Order</p></div>
+            <a href="/Home/Index" class="btn btn-primary btn-sm mb-3">Continue Shopping</a>
+            <table id="example" class="table table-striped table-bordered table-sm infor-table"
+                           data-show-export="true"
+                           data-show-toggle="true"
+                           data-show-columns="true"
+                           data-export-data-type="excel"
+                           data-click-to-select="true"
+                           data-height="500"
+                           data-pagination="true"
+                           data-export-types=['excel']
+                           data-page-list="[10, 25, 50, 100, 200, All]">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">View Detail</th>
+                        <th scope="col">Order Code</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Total Amount</th>
+                    </tr>
+                </thead>
+                <tbody id="bodyTotalOrder">
+                    @foreach (var item in Model.ListOrderHeader)
+                    {
+                    <tr>
+                        @if (Model.OrderID == item.OrderID)
+                        {
+                            <td><button disabled data-OrderID="@item.OrderID" class="btn btn-danger btn-sm ViewDetailOrder">View</button></td>
+                        }
+                        else
+                        {
+                            <td><button data-OrderID="@item.OrderID" class="btn btn-primary btn-sm ViewDetailOrder">View</button></td>
+                        }
+                        <td>@item.OrderID</td>
+                        <td>@item.OrderDate</td>
+                        @if (item.Status.Trim().Equals("Canceled"))
+                        {
+                        <td style="color: red;">@item.Status</td>
+                        }
+                        else
+                        {
+                        <td>@item.Status</td>
+                        }
+                        <td>@String.Format(CultureInfo.InvariantCulture, "{0:0,0}", item.Quantity)</td>
+                        <td>@String.Format(CultureInfo.InvariantCulture, "{0:0,0}", item.TotalAmount)</td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </form>
+    </div>
+</section>
+
+<section style="display: @(Model.OrderID == 0 ? "none" : "block");">
+    <div class="container1" style="padding: 30px; margin-top: 10px; margin-bottom: 20px">
+        <form method="post">
+            <div class="title" style="text-align: center; font-size: 25px; font-weight: bold;"><p>Detail Order : @Model.OrderID</p></div>
+            @foreach (var item in Model.ListOrderHeader)
+            {
+                if (item.OrderID.Equals(Model.OrderID))
+                {
+                    <div class="title" style="text-align: center; font-size: 25px; font-weight: bold;"><p style="color:@(item.Status.Trim().Equals("Canceled")? "red" : ""); ">Status Order : @item.Status</p></div>
+                }
+            }
+            <button data-OrderID="@Model.OrderID" class="btn btn-primary btn-sm mb-3" id="btnCancleOrder">Cancle Order</button>
+            <table id="example1" class="table table-striped table-bordered table-sm infor-table"
+                   data-show-export="true"
+                   data-show-toggle="true"
+                   data-show-columns="true"
+                   data-export-data-type="excel"
+                   data-click-to-select="true"
+                   data-height="600"
+                   data-pagination="true"
+                   data-export-types=['excel']
+                   data-page-list="[10, 25, 50, 100, 200, All]">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Item Code</th>
+                        <th scope="col">Sample</th>
+                        <th scope="col">Color</th>
+                        <th scope="col">Color Sample</th>
+                        <th scope="col">Size</th>
+                        <th scope="col">FOB Price</th>
+                        <th scope="col">Retail Price</th>
+                        <th scope="col">Quantity</th>
+                    </tr>
+                </thead>
+                <tbody id="bodyTotalOrder">
+                    @foreach (var item in Model.ListOrderLine)
+                    {
+                        <tr>
+                            <td>@item.ItemCode</td>
+
+                            <td><img width="30" src="~/image/product/sp1.jpg" /></td>
+                            <td>@item.ColorCode @item.ColorName</td>
+
+                            <td><img width="30" src="~/image/color1.png" /></td>
+                            <td>@item.Size</td>
+                            <td>@String.Format(CultureInfo.InvariantCulture, "{0:0,0}", item.FOBPrice) @item.Currency</td>
+                            <td>@item.RetailPrice @item.CurrencyRetail</td>
+                            <td>@item.Quantity</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </form>
+    </div>
+</section>
+
+<form method="post" style="display: none">
+    <input name="OrderID" id="OrderID" style="display: none" value="0">
+    <button asp-action="ViewDetailOrder" class="btn btn-primary btn-sm" id="btnViewDetailOrder"></button>
+</form>
+
+<div class="modal" id="confirmCancleOrder" style="background-color: rgb(79 77 77 / 30%);">
+    <div class="modal-dialog">
+        <div class="modal-content" style="margin-top: 50%;">
+            <div class="modal-header">
+                <h4 class="modal-title" id="addTargetLabel">Are you sure to cancle this order?</h4>
+            </div>
+            <div class="modal-body">
+                <form method="post">
+                    <input name="OrderIDCancle" id="OrderIDCancle" style="display: none" value="0">
+                    <button asp-action="CancleOrder" class="btn btn-primary btn-sm">OK</button>
+                    <button id="btnCloseCancelOrder" type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Cancel</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        $(function () {
+            $('#example').bootstrapTable('destroy').bootstrapTable({
+                toolbar: '.toolbar',
+                search: true,
+                showColumns: true,
+                fixedColumns: true,
+                fixedNumber: 0,
+                fixedRightNumber: 0
+            });
+
+            $('#example1').bootstrapTable('destroy').bootstrapTable({
+                toolbar: '.toolbar',
+                search: true,
+                showColumns: true,
+                fixedColumns: true,
+                fixedNumber: 0,
+                fixedRightNumber: 0
+            });
+
+            $(".ViewDetailOrder").on("click", function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $("#OrderID").val($(this).attr('data-OrderID'));
+                $("#btnViewDetailOrder").click();
+            }); 
+
+            $("#btnCancleOrder").on("click", function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $("#OrderIDCancle").val($(this).attr('data-OrderID'));
+                $("#confirmCancleOrder").fadeIn(300);
+            });
+
+            $("#btnCloseCancelOrder").on("click", function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $("#confirmCancleOrder").fadeOut(300);
+            });
+        }); 
+    </script>
+}

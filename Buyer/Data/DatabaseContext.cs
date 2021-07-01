@@ -24,6 +24,10 @@ namespace Buyer.Data
 			modelbuilder.Entity<PriceCurrency>().HasNoKey();
 			modelbuilder.Entity<CartDetail>().HasNoKey();
 			modelbuilder.Entity<ItemCollection>().HasNoKey();
+
+			//Order
+			modelbuilder.Entity<OrderHeader>().HasNoKey();
+			modelbuilder.Entity<OrderLine>().HasNoKey();
 		}
 		#region DbSet
 
@@ -37,6 +41,11 @@ namespace Buyer.Data
 		public DbSet<PriceCurrency> PriceCurrencyDbs { get; set; }
 		public DbSet<CartDetail> CartDetailDbs { get; set; }
 		public DbSet<ItemCollection> ItemCollectionDbs { get; set; }
+
+		//Order
+		public DbSet<OrderHeader> OrderHeaderDbs { get; set; }
+		public DbSet<OrderLine> OrderLineDbs { get; set; }
+
 
 		#endregion DbSet
 	}
