@@ -164,14 +164,12 @@
 .infor-right .infor-detail .box-gray span, .infor-right .infor-detail .box-gray p {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 16px;
-  color: #546081;
+  color: #333;
 }
 
 .infor-right .infor-detail .box-gray p {
-  font-weight: 600;
   position: absolute;
   left: 160px;
-  color: #333;
 }
 
 .infor-right .infor-detail .o1 {

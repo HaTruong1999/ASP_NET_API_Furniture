@@ -128,51 +128,25 @@ section {
                 padding-left: 20px;
             }
 
-                /*.infor-right .infor-detail .box-gray .inventory span, .infor-right .infor-detail .box-gray .product-code span {
-                    transform: skew(15deg);
-                }
-
-                .infor-right .infor-detail .box-gray .inventory p, .infor-right .infor-detail .box-gray .product-code p {
-                    transform: skew(15deg);
-                }*/
-
-                /*.infor-right .infor-detail .box-gray .product-code span, .infor-right .infor-detail .box-gray .product-code p {
-                    margin-left: 5px;
-                }*/
-
             .infor-right .infor-detail .box-gray .producer, .infor-right .infor-detail .box-gray .product-type {
                 padding-left: 20px;
             }
 
-                /*.infor-right .infor-detail .box-gray .producer span, .infor-right .infor-detail .box-gray .product-type span {
-                    transform: skew(-15deg);
-                }
-
-                .infor-right .infor-detail .box-gray .producer p, .infor-right .infor-detail .box-gray .product-type p {
-                    transform: skew(-15deg);
-                }*/
-
-                /*.infor-right .infor-detail .box-gray .producer span, .infor-right .infor-detail .box-gray .producer p {
-                    margin-left: 5px;
-                }*/
 
             .infor-right .infor-detail .box-gray span, .infor-right .infor-detail .box-gray p {
                 font-family: Arial, Helvetica, sans-serif;
                 font-size: 16px;
-                color: #546081;
+                color: #333;
             }
 
             .infor-right .infor-detail .box-gray p {
-                font-weight: 600;
                 position: absolute;
                 left: 160px;
-                color: #333;
             }
 
         .infor-right .infor-detail .o1 {
             margin-top: 10px;
             padding: 10px 25px 0;
-            /*transform: skew(-15deg);*/
             border-top: 2px solid rgba(143,134,127,0.5);
             border-right: 2px solid rgba(143,134,127,0.5);
             border-left: 2px solid rgba(143,134,127,0.5);
@@ -181,7 +155,6 @@ section {
         .infor-right .infor-detail .o2 {
             margin-bottom: 10px;
             padding: 0 25px 10px;
-            /*transform: skew(15deg);*/
             border-right: 2px solid rgba(143,134,127,0.5);
             border-bottom: 2px solid rgba(143,134,127,0.5);
             border-left: 2px solid rgba(143,134,127,0.5);

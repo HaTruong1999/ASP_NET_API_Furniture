@@ -31,12 +31,12 @@
                            data-page-list="[10, 25, 50, 100, 200, All]">
                 <thead class="thead-dark">
                     <tr>
-                        <th scope="col">View Detail</th>
-                        <th scope="col">Order Code</th>
-                        <th scope="col">Date</th>
-                        <th scope="col">Status</th>
-                        <th scope="col">Quantity</th>
-                        <th scope="col">Total Amount</th>
+                        <th>View Detail</th>
+                        <th>Order Code</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Quantity</th>
+                        <th>Total Amount</th>
                     </tr>
                 </thead>
                 <tbody id="bodyTotalOrder">
@@ -108,18 +108,18 @@
                 <tbody id="bodyTotalOrder">
                     @foreach (var item in Model.ListOrderLine)
                     {
-                        <tr>
-                            <td>@item.ItemCode</td>
-
-                            <td><img width="30" src="~/image/product/sp1.jpg" /></td>
-                            <td>@item.ColorCode @item.ColorName</td>
-
-                            <td><img width="30" src="~/image/color1.png" /></td>
-                            <td>@item.Size</td>
-                            <td>@String.Format(CultureInfo.InvariantCulture, "{0:0,0}", item.FOBPrice) @item.Currency</td>
-                            <td>@item.RetailPrice @item.CurrencyRetail</td>
-                            <td>@item.Quantity</td>
-                        </tr>
+                    <tr>
+                        <td>@item.ItemCode</td>
+                        <td><img width="30" src="http://192.168.169.240/images/products/@item.URLPicture.Trim()" /></td>
+                        @*<td><img width="30" src="~/image/product/sp1.jpg" /></td>*@
+                        <td>@item.ColorCode @item.ColorName</td>
+                        <td><img width="30" src="http://192.168.169.240/images/colors/@item.URLColor" /></td>
+                        <!--<td><img width="30" src="~/image/color1.png" />--><!--</td>-->
+                        <td>@item.Size</td>
+                        <td>@String.Format(CultureInfo.InvariantCulture, "{0:0,0}", item.FOBPrice) @item.Currency</td>
+                        <td>@item.RetailPrice @item.CurrencyRetail</td>
+                        <td>@item.Quantity</td>
+                    </tr>
                     }
                 </tbody>
             </table>
