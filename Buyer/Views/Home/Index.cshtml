@@ -80,7 +80,7 @@
 
 <div class="presentacion" style="padding: 0px;">
     <div class="logo">
-        <img src="/image/logo-main.png" alt="">
+        <img src="/image/logo-az.JPG" alt="">
     </div>
 </div>
 
@@ -120,8 +120,8 @@
                 <div class="row">
                     <div class="col-md-4">
                         <div>
-                            @*<img src="http://192.168.169.240/images/products/@item.ItemByCustomer.URLPicture.Trim()" style="max-width:100%" />*@
-                            <img src="~/image/product/sp1.jpg" style="max-width:100%" />
+                            <img src="http://192.168.169.240/images/products/@item.ItemByCustomer.URLPicture.Trim()" style="max-width:100%" />
+                            @*<img src="~/image/product/sp1.jpg" style="max-width:100%" />*@
                         </div>
                     </div>
                     <div class="col-md-8">
@@ -176,8 +176,8 @@
                                         @foreach (var color in item.ListColor)
                                         {
                                             <tr>
-                                                @*<td><img width="30" src="http://192.168.169.240/images/colors/@color.URLColor" /></td>*@
-                                                <td><img width="30" src="~/image/color1.png" /><!--</td>-->
+                                                <td><img width="30" src="http://192.168.169.240/images/colors/@color.URLColor" /></td>
+                                                <!--<td><img width="30" src="~/image/color1.png" />--><!--</td>-->
                                                 <td>@color.ColorCode - @color.Description</td>
                                                 @foreach (var size in item.ListSize)
                                                 {
