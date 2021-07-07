@@ -194,8 +194,8 @@
                                 </table>
                             </div>
                             <div class="flex" style="justify-content: flex-end ">
-                                <p style="font-weight: 500;">Amount: <span class="AmountAndPrice inputAmount">@item.ItemByCustomer.Quantity</span></p>
-                                <p style="font-weight: 500;margin-left: 40px">Total Price: <span data-price="@item.ItemByCustomer.FOBPrice" data-currency="@item.ItemByCustomer.CurrencyCode.Trim()" class="AmountAndPrice inputTotalPrice">@String.Format(CultureInfo.InvariantCulture, "{0:0,0}", item.ItemByCustomer.TotalAmount)</span></p>
+                                <p style="font-weight: 500;">Quantity: <span class="AmountAndPrice inputAmount">@item.ItemByCustomer.Quantity</span></p>
+                                <p style="font-weight: 500;margin-left: 40px">Total Amount: <span data-price="@item.ItemByCustomer.FOBPrice" data-currency="@item.ItemByCustomer.CurrencyCode.Trim()" class="AmountAndPrice inputTotalPrice">@String.Format(CultureInfo.InvariantCulture, "{0:0,0}", item.ItemByCustomer.TotalAmount)</span></p>
                             </div>
                             <div class="flex" style="justify-content: flex-start">
                                 <div class="form-group flex mr-4">
@@ -251,7 +251,7 @@
     <div class="modal-dialog">
         <div class="modal-content" style="margin-top: 50%;">
             <div class="modal-header">
-                <h4 class="modal-title" id="addTargetLabel">You have to enter your retail price for this item!</h4>
+                <h4 class="modal-title" id="addTargetLabel">Please enter your Retail Price and Quantity!</h4>
             </div>
             <div class="modal-body">
                 <button id="closeErrAddToCart" type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
@@ -259,6 +259,7 @@
         </div>
     </div>
 </div>
+
 
 <div class="modal" id="successNotification" style="background-color: rgb(79 77 77 / 30%);">
     <div class="modal-dialog">
@@ -360,8 +361,10 @@
                 e.stopPropagation();
 
                 let retailPrice = $(this).parents('.infor-right').find('.InputRetaiPrice').val();
+                let quantity = Number($(this).parents('.infor-right').find('.inputAmount')[0].innerHTML);
+                console.log(quantity);
 
-                if (retailPrice.length > 0 ) {
+                if (retailPrice.length > 0 && quantity > 0) {
                     let ItemCode = $(this).attr('data-itemcode');
 
                     let countInput = Number($(this).parents('.infor-right').find('.input-amount-order').length);
@@ -393,7 +396,6 @@
 
             //count totalPriceOrder
             let dem = Number($(".TotalOrder .totalPriceEachItem").length);
-            console.log(dem);
             if (dem > 0) {
                 let totalPriceOrder = 0;
                 for (let i = 0; i < dem; i++) {
