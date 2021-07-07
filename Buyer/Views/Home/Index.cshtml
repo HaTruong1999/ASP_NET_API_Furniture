@@ -239,6 +239,11 @@
                     <input name="RetailPrice" id="RetailPrice" style="display: none" value="0">
                     <input name="RetailCurrency" id="RetailCurrency" style="display: none" value="0">
                     <input name="arrayVariant" id="arrayVariant" style="display: none" value="0">
+                    <div style="display: none">
+                        <input name="Gender" id="GenderAddToCart" style="display: none" value="0">
+                        <input name="Season" id="SeasonAddToCart" style="display: none" value="0">
+                        <input name="Collection" id="CollectionAddToCart" style="display: none" value="0">
+                    </div>
                     <button id="btnAddItemToCart" asp-action="InsertItemOrderToCart" class="btn btn-primary btn-sm">OK</button>
                     <button id="btnCancelAddItem" type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Cancel</button>
                 </form>
@@ -279,6 +284,11 @@
             </div>
             <div class="modal-body">
                 <form method="post">
+                    <div style="display: none">
+                        <input name="Gender" id="GenderToOrder" style="display: none" value="0">
+                        <input name="Season" id="SeasonToOrder" style="display: none" value="0">
+                        <input name="Collection" id="CollectionToOrder" style="display: none" value="0">
+                    </div>
                     <button asp-action="InsertOrder" class="btn btn-primary btn-sm">OK</button>
                     <button id="btnCancelOrder" type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Cancel</button>
                 </form>
@@ -288,9 +298,12 @@
 </div>
 
 <form method="post" style="display: none">
-    <input name="Gender" id="Gender" style="display: none" value="0">
-    <input name="Season" id="Season" style="display: none" value="0">
-    <input name="Collection" id="Collection" style="display: none" value="0">
+    <div style="display: none">
+        <input name="Gender" id="Gender" style="display: none" value="0">
+        <input name="Season" id="Season" style="display: none" value="0">
+        <input name="Collection" id="Collection" style="display: none" value="0">
+    </div>
+    
     <button asp-action="FilterItem" class="btn btn-primary btn-sm" id="btnToCallFilterAction"></button>
 </form>
 
@@ -388,6 +401,10 @@
                     $("#RetailCurrency").val(RetailCurrency);
                     $("#arrayVariant").val(arrayVariant);
 
+                    $("#GenderAddToCart").val($("#cbbGender").val());
+                    $("#SeasonAddToCart").val($("#cbbSeason").val());
+                    $("#CollectionAddToCart").val($("#cbbCollection").val());
+
                     $("#confirmAddItem").fadeIn(300);
 
                 } else
@@ -443,6 +460,9 @@
             $("#btnConfirmOrder").click(function (e) {
                 e.preventDefault();
                 e.stopPropagation();
+                $("#GenderToOrder").val($("#cbbGender").val());
+                $("#SeasonToOrder").val($("#cbbSeason").val());
+                $("#CollectionToOrder").val($("#cbbCollection").val());
                 $("#confirmOrder").fadeIn(300);
             });
 

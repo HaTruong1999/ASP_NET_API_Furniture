@@ -76,7 +76,7 @@ namespace Buyer.Mvc.Controllers
 		}
 
 		[HttpPost]
-		public IActionResult InsertItemOrderToCart(string ItemCode, int FOBPrice, string Currency, string RetailPrice, string RetailCurrency, string arrayVariant)
+		public IActionResult InsertItemOrderToCart(string Gender, string Season, string Collection,string ItemCode, int FOBPrice, string Currency, string RetailPrice, string RetailCurrency, string arrayVariant)
 		{
 			UserID = HttpContext.Session.GetString("UserID").ToString();
 			CustID = HttpContext.Session.GetString("CustID").ToString();
@@ -97,16 +97,17 @@ namespace Buyer.Mvc.Controllers
 
 				Context.Database.ExecuteSqlRaw("[dbo].[usp_Order_Cart] @p0, @p1, @p2, @p3, @p4 , @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13", "InsertOrderCart", UserID, CustID, 1, ItemCode.Trim(), Variant, ColorCode, SizeCode, Quantity, FOBPrice, Currency, 0, RetailPrice, RetailCurrency);
 			}
-
-			return RedirectToAction("Index");
+			return RedirectToAction("Index", new { notifiOrderSuccess = false, Gender = Gender, Season = Season, Collection = Collection });
+			//return RedirectToAction("Index");
 		}
 		[HttpPost]
-		public IActionResult InsertOrder()
+		public IActionResult InsertOrder(string Gender, string Season, string Collection)
 		{
 			UserID = HttpContext.Session.GetString("UserID").ToString();
 			CustID = HttpContext.Session.GetString("CustID").ToString();
 			Context.Database.ExecuteSqlRaw("[dbo].[usp_Order_Cart] @p0, @p1, @p2", "ConfirmOrderCart", UserID, CustID);
-			return RedirectToAction("Index", new { notifiOrderSuccess = true });
+			//return RedirectToAction("Index", new { notifiOrderSuccess = true });
+			return RedirectToAction("Index", new { notifiOrderSuccess = true, Gender = Gender, Season = Season, Collection = Collection });
 		}
 
 		[HttpPost]
