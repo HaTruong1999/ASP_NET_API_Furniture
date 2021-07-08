@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace Buyer.Mvc.Controllers
 {
@@ -46,6 +48,7 @@ namespace Buyer.Mvc.Controllers
 		[HttpPost]
 		public IActionResult LoginToPage(string UserID, string Password)
 		{
+			Password = MD5Hash(Password);
 			foreach (OrderUser orderUser in ListOrderUser)
 			{
 				if (orderUser.UserID.Trim().Equals(UserID.Trim()))
@@ -72,6 +75,26 @@ namespace Buyer.Mvc.Controllers
 			Context.Database.ExecuteSqlRaw("dbo.[usp_UserLogin] @p0,@p1", "UserIsLogout", UserID);
 			HttpContext.Session.Remove("usercode");
 			return RedirectToAction("Index", new { UserID = UserID, ErrUserID = "", Password = Password, ErrPassword = "" });
+		}
+		public string MD5Hash(string text)
+		{
+			MD5 md5 = new MD5CryptoServiceProvider();
+
+			//compute hash from the bytes of text  
+			md5.ComputeHash(ASCIIEncoding.ASCII.GetBytes(text));
+
+			//get hash result after compute it  
+			byte[] result = md5.Hash;
+
+			StringBuilder strBuilder = new StringBuilder();
+			for (int i = 0; i < result.Length; i++)
+			{
+				//change it into 2 hexadecimal digits  
+				//for each byte  
+				strBuilder.Append(result[i].ToString("x2"));
+			}
+
+			return strBuilder.ToString();
 		}
 	}
 }
