@@ -1,15 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 using Buyer.Mvc.Models;
 using Buyer.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Data.SqlClient;
 
 namespace Buyer.Mvc.Controllers
 {
@@ -23,32 +18,38 @@ namespace Buyer.Mvc.Controllers
             Context = _db;
         }
         public List<OrderHeader> ListOrderHeader = new List<OrderHeader>();
+        //Detail Order Line
+        public OrderHeader OrderHeader = new OrderHeader();
         public List<OrderLine> ListOrderLine = new List<OrderLine>();
-        public void viewLists(int OrderID)
+        public void viewLists()
         {
-            if(OrderID > 0)
-                ListOrderLine = Context.OrderLineDbs.FromSqlRaw("dbo.[usp_Order] @p0, @p1,@p2", "ViewOrderLine", OrderID, CustID).ToList();
             ListOrderHeader = Context.OrderHeaderDbs.FromSqlRaw("dbo.[usp_Order] @p0, @p1,@p2", "ViewOrderHeader", 0, CustID).ToList();
         }
-        public IActionResult Index(int OrderID)
+        public IActionResult Index()
         {
             UserID = HttpContext.Session.GetString("UserID").ToString();
             CustID = HttpContext.Session.GetString("CustID").ToString();
-            viewLists(OrderID);
-            var model = (ListOrderHeader, ListOrderLine, OrderID);
+            viewLists();
+            var model = (ListOrderHeader);
             return View(model);
         }
-        [HttpPost]
-        public IActionResult ViewDetailOrder(string OrderID)
+        public IActionResult DetailOrder(int id)
         {
-
-            return RedirectToAction("Index", new { OrderID = int.Parse(OrderID)});
+            if(id > 0)
+            {
+                ListOrderLine = Context.OrderLineDbs.FromSqlRaw("dbo.[usp_Order] @p0, @p1,@p2", "ViewOrderLine", id, CustID).ToList();
+                OrderHeader = Context.OrderHeaderDbs.FromSqlRaw("dbo.[usp_Order] @p0, @p1", "ViewOneOrderHeader", id).ToList()[0];
+            }
+                
+            var model = (OrderHeader,ListOrderLine);
+            return View(model);
+            //return RedirectToAction("Index", new { OrderID = int.Parse(OrderID)});
         }
-        [HttpPost]
-        public IActionResult CancleOrder(string OrderIDCancle)
+
+        public IActionResult CancelOrder(int id)
         {
-            Context.Database.ExecuteSqlRaw("dbo.[usp_Order] @p0, @p1,@p2", "CancelOrder", int.Parse(OrderIDCancle), "");
-            return RedirectToAction("Index", new { OrderID = 0 });
+            Context.Database.ExecuteSqlRaw("dbo.[usp_Order] @p0, @p1", "CancelOrder", id);
+            return RedirectToAction("DetailOrder", new { id = id });
         }
     }
 }
