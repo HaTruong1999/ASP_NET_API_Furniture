@@ -24,6 +24,7 @@ namespace Buyer.Data
 			modelbuilder.Entity<PriceCurrency>().HasNoKey();
 			modelbuilder.Entity<CartDetail>().HasNoKey();
 			modelbuilder.Entity<ItemCollection>().HasNoKey();
+			modelbuilder.Entity<Division>().HasNoKey();
 
 			//Order
 			modelbuilder.Entity<OrderHeader>().HasNoKey();
@@ -41,6 +42,7 @@ namespace Buyer.Data
 		public DbSet<PriceCurrency> PriceCurrencyDbs { get; set; }
 		public DbSet<CartDetail> CartDetailDbs { get; set; }
 		public DbSet<ItemCollection> ItemCollectionDbs { get; set; }
+		public DbSet<Division> DivisionDbs { get; set; }
 
 		//Order
 		public DbSet<OrderHeader> OrderHeaderDbs { get; set; }

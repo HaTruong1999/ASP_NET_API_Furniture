@@ -6,13 +6,7 @@
 
 @section CSS{
     <link rel="stylesheet" href="~/css/home.css" />
-    @*<link rel="stylesheet" href="~/css/bootstrap-select.css" />*@
 }
-<div class="presentacion" style="padding: 0px;">
-    <div class="logo">
-        <img src="/image/logo-az.JPG" alt="">
-    </div>
-</div>
 
 <section>
     <div class="container1" style="padding: 10px; margin-top: 10px;">
@@ -33,7 +27,8 @@
                     <tr>
                         <th>View Detail</th>
                         <th>Order Code</th>
-                        <th>Date</th>
+                        <th>Date Order</th>
+                        <th>Last Changed Order</th>
                         <th>Status</th>
                         <th>Quantity</th>
                         <th>Total Amount</th>
@@ -45,21 +40,22 @@
                     <tr>
                         @if (Model.OrderID == item.OrderID)
                         {
-                        <td><button disabled data-OrderID="@item.OrderID" class="btn btn-danger btn-sm ViewDetailOrder">View</button></td>
+                            <td><button disabled data-OrderID="@item.OrderID" class="btn btn-danger btn-sm ViewDetailOrder">View</button></td>
                         }
                         else
                         {
-                        <td><button data-OrderID="@item.OrderID" class="btn btn-primary btn-sm ViewDetailOrder">View</button></td>
+                            <td><button data-OrderID="@item.OrderID" class="btn btn-primary btn-sm ViewDetailOrder">View</button></td>
                         }
                         <td>@item.OrderID</td>
                         <td>@item.OrderDate</td>
+                        <td>@item.LastChangedDate</td>
                         @if (item.Status.Trim().Equals("Canceled"))
                         {
-                        <td style="color: red;">@item.Status</td>
+                            <td style="color: red;">@item.Status</td>
                         }
                         else
                         {
-                        <td>@item.Status</td>
+                            <td>@item.Status</td>
                         }
                         <td>@String.Format(CultureInfo.InvariantCulture, "{0:0,0}", item.Quantity)</td>
                         <td>@String.Format(CultureInfo.InvariantCulture, "{0:0,0}", item.TotalAmount)</td>
@@ -110,7 +106,7 @@
                         <th scope="col">Color</th>
                         <th scope="col">Color Sample</th>
                         <th scope="col">Size</th>
-                        <th scope="col">FOB Price</th>
+                        <th scope="col">Sale Price</th>
                         <th scope="col">Retail Price</th>
                         <th scope="col">Quantity</th>
                     </tr>
@@ -120,11 +116,11 @@
                     {
                         <tr>
                             <td>@item.ItemCode</td>
-                            <td>@*<img width="30" src="http://192.168.169.240/images/products/@item.URLPicture.Trim()" />*@<!--</td>-->
-                            @*<td><img width="30" src="~/image/product/sp1.jpg" /></td>*@
+                            <!--<td>-->@*<img width="30" src="http://192.168.169.240/images/products/@item.URLPicture.Trim()" />*@<!--</td>-->
+                            <td><img width="30" src="~/image/product/sp1.jpg" /></td>
                             <td>@item.ColorCode @item.ColorName</td>
-                            <td>@*<img width="30" src="http://192.168.169.240/images/colors/@item.URLColor" />*@<!--</td>-->
-                            @*<td><img width="30" src="~/image/color1.png" /></td>*@
+                            <!--<td>-->@*<img width="30" src="http://192.168.169.240/images/colors/@item.URLColor" />*@<!--</td>-->
+                            <td><img width="30" src="~/image/color1.png" /></td>
                             <td>@item.Size</td>
                             <td>@String.Format(CultureInfo.InvariantCulture, "{0:0,0}", item.FOBPrice) @item.Currency</td>
                             <td>@item.RetailPrice @item.CurrencyRetail</td>

@@ -9,6 +9,7 @@ namespace Buyer.Mvc.Models
     {
         public int OrderID { get; set; }
         public DateTime OrderDate { get; set; }
+        public DateTime LastChangedDate { get; set; }
         public string Status { get; set; }
         public int Quantity { get; set; }
         public decimal TotalAmount { get; set; }

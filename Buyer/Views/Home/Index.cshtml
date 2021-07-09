@@ -1,4 +1,4 @@
-﻿@model (List<Buyer.Mvc.Models.ItemByCustomerOrder> ListItemByCustomerOrder, List<Buyer.Mvc.Models.CartDetail> ListCartDetail, List<Buyer.Mvc.Models.ItemSeason> listSeason, List<Buyer.Mvc.Models.PriceCurrency> listCurrency, List<Buyer.Mvc.Models.ItemCollection> listCollection, bool notifiOrderSuccess, string Gender, string Season, string Collection)
+﻿@model (List<Buyer.Mvc.Models.ItemByCustomerOrder> ListItemByCustomerOrder, List<Buyer.Mvc.Models.CartDetail> ListCartDetail, List<Buyer.Mvc.Models.ItemSeason> listSeason, List<Buyer.Mvc.Models.PriceCurrency> listCurrency, List<Buyer.Mvc.Models.ItemCollection> listCollection, List<Buyer.Mvc.Models.Division> listDivision, bool notifiOrderSuccess, string Gender, string Season, string Collection, int Division)
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -6,7 +6,6 @@
 
 @section CSS{
     <link rel="stylesheet" href="~/css/home.css" />
-    @*<link rel="stylesheet" href="~/css/bootstrap-select.css" />*@
 }
 
 <div class="TotalOrder">
@@ -15,7 +14,7 @@
     <input type="checkbox" hidden class="nav_input" id="nav-mobile-input">
     <label for="nav-mobile-input" class="nav_overlay"></label>
 
-    <div class="nav_mobile">
+    <div class="nav_mobile" style="width: 60%; max-width: 60%;">
         <label for="nav-mobile-input" class="nav_mobile_close" style="margin-left: 0px">
             <span class="btn btn-primary btn-sm">Close</span>
         </label>
@@ -42,10 +41,10 @@
                                         <th scope="col">Item Code</th>
                                         <th scope="col">Collection</th>
                                         <th scope="col">Sample</th>
-                                        <th scope="col">FOBPrice</th>
+                                        <th scope="col">Sale Price</th>
                                         <th scope="col">Retail Price</th>
                                         <th scope="col">Quantity</th>
-                                        <th scope="col">Total Price</th>
+                                        <th scope="col">Total Amount</th>
                                     </tr>
                                 </thead>
                                 <tbody id="bodyTotalOrder">
@@ -54,12 +53,12 @@
                                         <tr>
                                             <td>@item.ItemCode</td>
                                             <td>@item.Collection</td>
-                                            <th><img src="http://192.168.169.240/images/products/@item.URLPicture.Trim()" width="30" /></th>
-                                            @*<td><img width="30" src="~/image/product/sp1.jpg" /></td>*@
-                                            <td>@String.Format(CultureInfo.InvariantCulture, "{0:0,0}", item.FOBPrice)</td>
-                                            <td>@String.Format(CultureInfo.InvariantCulture, "{0:0,0}", item.RetailPrice)</td>
+                                            @*<th><img src="http://192.168.169.240/images/products/@item.URLPicture.Trim()" width="30" /></th>*@
+                                            <td><img width="30" src="~/image/product/sp1.jpg" /></td>
+                                            <td>@String.Format(CultureInfo.InvariantCulture, "{0:0,0}", item.FOBPrice) @item.Currency</td>
+                                            <td>@String.Format(CultureInfo.InvariantCulture, "{0:0,0}", item.RetailPrice) @item.CurrencyRetail</td>
                                             <td>@String.Format(CultureInfo.InvariantCulture, "{0:0,0}", item.Quantity)</td>
-                                            <td class="totalPriceEachItem">@String.Format(CultureInfo.InvariantCulture, "{0:0,0}", item.TotalAmount)</td>
+                                            <td class="totalPriceEachItem">@String.Format(CultureInfo.InvariantCulture, "{0:0,0}", item.TotalAmount) @item.Currency</td>
                                         </tr>
                                     }
                                 </tbody>
@@ -70,30 +69,31 @@
             </div>
             <div class="flex" style="justify-content: space-between">
                 <button type="submit" class="btn btn-primary btn-sm" id="btnConfirmOrder">Confirm</button>
-                <div class="TotalPrice" style="margin-left: 40%">
+                @*<div class="TotalPrice" style="margin-left: 40%">
                     <p style="margin-bottom: 0px; font-size: 16px; font-weight: 500">Total Order: <span id="totalPriceOrder">0</span></p>
-                </div>
+                </div>*@
             </div>
         </form>
     </div>
 </div>
 
-<div class="presentacion" style="padding: 0px;">
-    <div class="logo">
-        <img src="/image/logo-az.JPG" alt="">
-    </div>
-</div>
-
 <div class="filter">
     <form>
-        <select class="filterItemOrder" style="width: 300px" id="cbbGender">
+        <select class="filterItemOrder" style="width: 250px" id="cbbDivision">
+            @foreach (var item in Model.listDivision)
+            {
+            <option selected="@(Model.Division == item.DivisionCode )" value="@item.DivisionCode">@item.DivisionCode - @item.Description</option>
+            }
+        </select>
+
+        <select class="filterItemOrder" style="width: 250px" id="cbbGender">
             <option selected="@Model.Gender.Equals("%")" value="%">-- All Gender --</option>
             <option selected="@Model.Gender.Equals("MEN")" value="MEN">Man</option>
             <option selected="@Model.Gender.Equals("WOMEN")" value="WOMEN">Women</option>
-            <option selected="@Model.Gender.Equals("OTHER")" value="OTHER">Other</option>
+            @*<option selected="@Model.Gender.Equals("OTHER")" value="OTHER">Other</option>*@
         </select>
 
-        <select class="filterItemOrder" style="width: 300px" id="cbbSeason">   
+        <select class="filterItemOrder" style="width: 250px" id="cbbSeason">
             <option selected="@Model.Season.Equals("%")" value="%">-- All Season --</option>
             @foreach (var item in Model.listSeason)
             {
@@ -101,7 +101,7 @@
             }
         </select>
 
-        <select class="filterItemOrder" style="width: 300px" id="cbbCollection">
+        <select class="filterItemOrder" style="width: 250px" id="cbbCollection">
             <option selected="@Model.Collection.Equals("%")" value="%">-- All Collection --</option>
             @foreach (var item in Model.listCollection)
             {
@@ -120,14 +120,14 @@
                 <div class="row">
                     <div class="col-md-4">
                         <div>
-                            <img src="http://192.168.169.240/images/products/@item.ItemByCustomer.URLPicture.Trim()" style="max-width:100%" />
-                            @*<img src="~/image/product/sp1.jpg" style="max-width:100%" />*@
+                            @*<img src="http://192.168.169.240/images/products/@item.ItemByCustomer.URLPicture.Trim()" style="max-width:100%" />*@
+                            <img src="~/image/product/sp1.jpg" style="max-width:100%" />
                         </div>
                     </div>
                     <div class="col-md-8">
                         <div class="infor-right">
                             <div class="price-box flex" style="margin-bottom: 0px">
-                                <p class="price">@item.ItemByCustomer.Description - @String.Format(CultureInfo.InvariantCulture, "{0:0,0}", item.ItemByCustomer.FOBPrice) @item.ItemByCustomer.CurrencyCode</p>
+                                <p class="price">@item.ItemByCustomer.Description </p>
                             </div>
                             <div class="infor-detail" style="margin-bottom: 0px">
                                 <div class="box-gray o1">
@@ -135,6 +135,10 @@
                                         <span>Item Code:</span>
                                         <p>@item.ItemByCustomer.ItemCode</p>
 
+                                    </div>
+                                    <div class="inventory flex">
+                                        <span>Sale Price:</span>
+                                        <p>@String.Format(CultureInfo.InvariantCulture, "{0:0,0}", item.ItemByCustomer.FOBPrice) @item.ItemByCustomer.CurrencyCode</p>
                                     </div>
                                     <div class="product-code flex">
                                         <span>Season:</span>
@@ -176,8 +180,8 @@
                                         @foreach (var color in item.ListColor)
                                         {
                                             <tr>
-                                                <td><img width="30" src="http://192.168.169.240/images/colors/@color.URLColor" /></td>
-                                                <!--<td><img width="30" src="~/image/color1.png" />--><!--</td>-->
+                                                @*<td><img width="30" src="http://192.168.169.240/images/colors/@color.URLColor" /></td>*@
+                                                <td><img width="30" src="~/image/color1.png" /><!--</td>-->
                                                 <td>@color.ColorCode - @color.Description</td>
                                                 @foreach (var size in item.ListSize)
                                                 {
@@ -243,6 +247,7 @@
                         <input name="Gender" id="GenderAddToCart" style="display: none" value="0">
                         <input name="Season" id="SeasonAddToCart" style="display: none" value="0">
                         <input name="Collection" id="CollectionAddToCart" style="display: none" value="0">
+                        <input name="Division" id="DivisionAddToCart" style="display: none" value="0">
                     </div>
                     <button id="btnAddItemToCart" asp-action="InsertItemOrderToCart" class="btn btn-primary btn-sm">OK</button>
                     <button id="btnCancelAddItem" type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Cancel</button>
@@ -264,7 +269,6 @@
         </div>
     </div>
 </div>
-
 
 <div class="modal" id="successNotification" style="background-color: rgb(79 77 77 / 30%);">
     <div class="modal-dialog">
@@ -288,6 +292,7 @@
                         <input name="Gender" id="GenderToOrder" style="display: none" value="0">
                         <input name="Season" id="SeasonToOrder" style="display: none" value="0">
                         <input name="Collection" id="CollectionToOrder" style="display: none" value="0">
+                        <input name="Division" id="DivisionToOrder" style="display: none" value="0">
                     </div>
                     <button asp-action="InsertOrder" class="btn btn-primary btn-sm">OK</button>
                     <button id="btnCancelOrder" type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Cancel</button>
@@ -302,6 +307,7 @@
         <input name="Gender" id="Gender" style="display: none" value="0">
         <input name="Season" id="Season" style="display: none" value="0">
         <input name="Collection" id="Collection" style="display: none" value="0">
+        <input name="Division" id="Division" style="display: none" value="0">
     </div>
     
     <button asp-action="FilterItem" class="btn btn-primary btn-sm" id="btnToCallFilterAction"></button>
@@ -336,6 +342,7 @@
                 $("#Gender").val($("#cbbGender").val());
                 $("#Season").val($("#cbbSeason").val());
                 $("#Collection").val($("#cbbCollection").val());
+                $("#Division").val($("#cbbDivision").val());
 
                 $("#btnToCallFilterAction").click();
             });
@@ -404,6 +411,7 @@
                     $("#GenderAddToCart").val($("#cbbGender").val());
                     $("#SeasonAddToCart").val($("#cbbSeason").val());
                     $("#CollectionAddToCart").val($("#cbbCollection").val());
+                    $("#DivisionAddToCart").val($("#cbbDivision").val());
 
                     $("#confirmAddItem").fadeIn(300);
 
@@ -463,6 +471,8 @@
                 $("#GenderToOrder").val($("#cbbGender").val());
                 $("#SeasonToOrder").val($("#cbbSeason").val());
                 $("#CollectionToOrder").val($("#cbbCollection").val());
+                $("#DivisionToOrder").val($("#cbbDivision").val());
+
                 $("#confirmOrder").fadeIn(300);
             });
 

@@ -11,7 +11,9 @@ namespace Buyer.Mvc.Models
         public string Collection { get; set; }
         public string URLPicture { get; set; }
         public decimal FOBPrice { get; set; }
+        public string Currency { get; set; }
         public string RetailPrice { get; set; }
+        public string CurrencyRetail { get; set; }
         public int Quantity { get; set; }
         public decimal TotalAmount { get; set; }
     }
