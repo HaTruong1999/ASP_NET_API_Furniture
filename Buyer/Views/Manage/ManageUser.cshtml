@@ -1,0 +1,199 @@
+﻿@model (List<Buyer.Mvc.Models.User.User> Users, Buyer.Mvc.Models.User.User User)
+@{
+    Layout = "_LayoutFurniture";
+    ViewData["Title"] = "Manage product";
+}
+
+<section class="manage">
+    <div class="container">
+        <div class="cart-infor">
+            <div class="nav-manage flex j-center">
+                <a id="manage-product" style="width: 15%;" href="~/Manage/Index">Sản Phẩm</a>
+                <a id="manage-user" style="width: 15%;" href="#">Tài Khoản</a>
+                <a style="width: 15%;" href="#">Loại Sản Phẩm</a>
+                <a style="width: 15%;" href="#">Nhà Cung Cấp</a>
+            </div>
+
+            <div style="font-size: 15px;" class="card rounded shadow border-0">
+                <div class="card-body p-2 bg-white rounded">
+                    <table id="example1" style="width:100%" class="example table table-striped table-bordered"
+                           data-show-export="true"
+                           data-show-toggle="true"
+                           data-show-columns="true"
+                           data-click-to-select="true"
+                           data-height="600"
+                           data-pagination="true"
+                           data-export-types=['excel']
+                           data-page-list="[10, 25, 50, 100, 200, All]">
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Photo</th>
+                                <th>Password</th>
+                                <th>Fullname</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Xóa</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Users)
+                            {
+                                <tr>
+                                    <td>@item.username</td>
+                                    <td><img style="max-width: 40px;" src="~/image/user/@item.photo" alt=""></td>
+                                    <td>********</td>
+                                    <td>@item.fullname</td>
+                                    <td>@item.email</td>
+                                    <td>@item.phone</td>
+                                    <td><a style="font-size: 17px;" href="#" class="btn btn-primary btn-sm btnDelete" data-id="@item.username">Delete</a></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@if (Model.User.username == null)
+{
+    @section Htmls_User {
+        <div class="items col-md-4 j-end">
+            <div class="logo-right flex a-center j-end">
+                <div class="login-registration flex ">
+                    <i class="fas fa-sign-in-alt"></i>
+                    <ul>
+                        <li class="btn-login">Log in</li>
+                        <li class="btn-registration">Registration</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    }
+}
+else
+{
+    @section Htmls_User {
+        <div class="items col-md-4 j-end">
+            <div class="logo-right flex a-center j-end">
+                <div class="infor-user flex j-between">
+                    <i><img src="~/image/user/hatruong.jpg" alt="photo"></i>
+                    <p>HaTruong</p>
+                </div>
+            </div>
+        </div>
+    }
+
+    @section Infor_User {
+        <div class="container-detail-user">
+            <div class="detail-user">
+                <div class="title-user flex j-center">
+                    <span></span>
+                    <div class="parent-title">
+                        <a href="#">THÔNG TIN TÀI KHOẢN</a>
+                    </div>
+                </div>
+                <div class="flex j-between">
+                    <div class="user-left">
+                        <img src="~/image/user/hatruong.jpg" alt="avatar">
+                    </div>
+                    <div class="user-right">
+                        <div class="username">
+                            <p>@Model.User.username</p>
+                        </div>
+                        <ul class="information-user">
+                            <li>
+                                Họ Tên: <p>@Model.User.fullname</p>
+                            </li>
+                            <li>
+                                Email: <p>@Model.User.email</p>
+                            </li>
+                            <li>
+                                SDT: <p>@Model.User.phone</p>
+                            </li>
+                            <li>
+                                Ngày Sinh: <p>26 / 08 / 1999</p>
+                            </li>
+                        </ul>
+                        <div class="flex j-between">
+                            <a class="btn btn-admin" href="/Manage/Index"><span>Quản lí WEB</span></a>
+                            <a class="btn btn-singout" href="~/Page/Index"><span>Đăng Xuất</span></a>
+                            <button class="btn btn-close"><span>close</span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+@section Scripts {
+    <script>
+        $(function () {
+            $('.example').bootstrapTable('destroy').bootstrapTable({
+                toolbar: '.toolbar',
+                search: true,
+                showColumns: true,
+                fixedColumns: true,
+                fixedNumber: 0,
+                fixedRightNumber: 0
+            });
+            //mở form đăng nhập
+            $(".btn-login").click(function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $(".container-login").show(300);
+            });
+            //đóng form đăng nhập
+            $(".close-login").click(function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $(".container-login").hide(300);
+            });
+            //information-user
+            $(".infor-user").click(function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $(".container-detail-user").show(300);
+            });
+
+            $(".btn-close").click(function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $(".container-detail-user").hide(200);
+            });
+            ////manage-page
+            //$("#manage-product").click(function (e) {
+            //    e.preventDefault();
+            //    e.stopPropagation();
+            //    $(".manage-user").hide(300);
+            //    $(".manage-product").show(300);
+            //    $(this).css("background-color", "red");
+            //    $("#manage-user").css("background-color", " #ff7600");
+            //});
+
+            //$("#manage-user").click(function (e) {
+            //    e.preventDefault();
+            //    e.stopPropagation();
+            //    $(".manage-product").hide(300);
+            //    $(".manage-user").show(300);
+            //    $(this).css("background-color", "red");
+            //    $("#manage-product").css("background-color", " #ff7600");
+            //});
+            //form-add-product
+            $(".btn-add-product").click(function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $(".form-product").show(300);
+            });
+
+            $(".close-form-product").click(function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $(".form-product").hide(300);
+            });
+        });
+    </script>
+}

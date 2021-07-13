@@ -1,0 +1,191 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Mew_Furniture</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="https://unpkg.com/bootstrap-table@1.18.2/dist/bootstrap-table.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/bootstrap-table@1.18.2/dist/extensions/fixed-columns/bootstrap-table-fixed-columns.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/lib/fontawesome-free-5.12.1-web/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/furniture.css" />
+
+</head>
+<body>
+    <div class="header-main">
+        <div class="logo-main">
+            <div class="container">
+                <div class="row">
+                    <div class="items col-md-4">
+                        <div class="logo-left flex a-center j-between">
+                            <input type="text" id="search" placeholder="Bạn cần tìm gì ..." /> <a href="#">
+                                <img src="http://bizweb.dktcdn.net/100/368/970/themes/740033/assets/search.png?1586168599868"
+                                     alt="timkiem" />
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="items col-md-4 j-center">
+                        <a href="index.htm" class="logo-center">
+                            <img src="http://bizweb.dktcdn.net/100/368/970/themes/740033/assets/logo.png?1586168599868"
+                                 alt="logo" />
+                        </a>
+                    </div>
+
+                    @RenderSection("Htmls_User", required: false)
+
+                </div>
+            </div>
+        </div>
+    </div>
+    @RenderSection("Infor_User", required: false)
+    @RenderBody()
+
+    <section class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="nav-footer col-md-3">
+                    <div class="item-nav-footer">
+                        <h3>Policy</h3>
+                        <ul>
+                            <li>Return policy</li>
+                            <li>Shipping policy</li>
+                            <li>Warranty policy</li>
+                            <li>Purchase policy</li>
+                            <li>Installment policy</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="nav-footer col-md-3">
+                    <div class="item-nav-footer">
+                        <h3>Sales Channel</h3>
+                        <ul>
+                            <li>Sendo</li>
+                            <li>Zalo</li>
+                            <li>Tiki</li>
+                            <li>Shopee</li>
+                            <li>Lazada</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="nav-footer col-md-3">
+                    <div class="item-nav-footer">
+                        <h3>About us</h3>
+                        <ul>
+                            <li>Home page</li>
+                            <li>Product</li>
+                            <li>News</li>
+                            <li>Introduce</li>
+                            <li>Contact</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="nav-footer col-md-3">
+                    <div class="item-nav-footer">
+                        <h3>Contact</h3>
+                        <ul>
+                            <li>
+                                <span>
+                                    <img src="https://bizweb.dktcdn.net/100/368/970/themes/740033/assets/on-maps.png?1586168599868"
+                                         alt="icon" />
+                                </span>
+                                442 Doi Can - Ba Dinh - Hanoi
+                            </li>
+                            <li>
+                                <span>
+                                    <img src="https://bizweb.dktcdn.net/100/368/970/themes/740033/assets/old-phone.png?1586168599868"
+                                         alt="icon" />
+                                </span>
+                                (04) 6674 2332
+                            </li>
+                            <li>
+                                <span>
+                                    <img src="https://bizweb.dktcdn.net/100/368/970/themes/740033/assets/email-envelope.png?1586168599868"
+                                         alt="icon" />
+                                </span>
+                                support@sapo.vn
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="footer-introduce">
+        <div class="container">
+            <div class="footer-logo-parrent">
+                <a href="#">
+                    <img src="https://bizweb.dktcdn.net/100/368/970/themes/740033/assets/logo.png?1586168599868"
+                         alt="logo" />
+                </a>
+            </div>
+            <p>
+                MewMew Investment Joint Stock Company is the No. 1 retailer in Vietnam in terms of revenue
+                and profit, with a network of more than 2,200 stores nationwide. MewMew operates chain
+                stores - restaurants MewFurniture, MewNature, MewINT, MewCoffee. In addition, MewMew has
+                expanded to overseas markets of Mew Furniture furniture chain in Southeast Asian
+                countries.
+            </p>
+            <div class="parrent-icon">
+                <img src="https://bizweb.dktcdn.net/100/368/970/themes/740033/assets/facebook.png?1586168599868"
+                     alt="facebook" />
+
+                <img src="https://bizweb.dktcdn.net/100/368/970/themes/740033/assets/twitter.png?1586168599868" alt="tiwter" />
+
+                <img src="https://bizweb.dktcdn.net/100/368/970/themes/740033/assets/instagram.png?1586168599868"
+                     alt="instagram" />
+
+                <img src="https://bizweb.dktcdn.net/100/368/970/themes/740033/assets/youtube.png?1586168599868" alt="youtobe" />
+            </div>
+            <div>
+                <img src="https://bizweb.dktcdn.net/100/368/970/themes/740033/assets/payment-1.png?1586168599868" alt="pto1" />
+                <img src="https://bizweb.dktcdn.net/100/368/970/themes/740033/assets/payment-2.png?1586168599868" alt="pto2" />
+                <img src="https://bizweb.dktcdn.net/100/368/970/themes/740033/assets/payment-3.png?1586168599868" alt="pto3" />
+                <img src="https://bizweb.dktcdn.net/100/368/970/themes/740033/assets/payment-4.png?1586168599868" alt="pto3" />
+            </div>
+        </div>
+    </section>
+
+    <section class="end">
+        <div class="container">
+            <p>Coppyright belongs to <span>MewTheme</span> . Provided by <span>Sapo</span></p>
+        </div>
+    </section>
+
+    <div class="contact-us">
+        <ul>
+            <li>
+                <a href="#">
+                    <img src="https://bizweb.dktcdn.net/100/368/970/themes/740033/assets/telephone.png?1586168599868"
+                         alt="call" />
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <img src="https://bizweb.dktcdn.net/100/368/970/themes/740033/assets/messenger.png?1586168599868"
+                         alt="mess" />
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <img src="https://bizweb.dktcdn.net/100/368/970/themes/740033/assets/zalo_des.png?1586168599868"
+                         alt="zalo" />
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="totop">
+        <span><i class="fas fa-chevron-up icon-totop"></i></span>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.18.2/dist/bootstrap-table.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.18.2/dist/extensions/fixed-columns/bootstrap-table-fixed-columns.min.js"></script>
+    <script src="https://unpkg.com/tableexport.jquery.plugin/tableExport.min.js"></script>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

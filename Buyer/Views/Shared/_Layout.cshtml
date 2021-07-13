@@ -14,7 +14,7 @@
     @RenderSection("CSS", required: false)
 </head>
 <body>
-    <div class="header-dark">
+    <!--<div class="header-dark">
         <nav class="navbar navbar-dark navbar-expand-lg navigation-clean-search">
             <div class="container">
                 <a class="navbar-brand" href="~/Home/Index"><img style="width: 120px;" src="/image/logo-az.JPG" alt=""></a>
@@ -24,25 +24,25 @@
                 <div class="collapse navbar-collapse" id="navcol-1">
                     <ul class="nav navbar-nav mr-auto">
                         <li class="nav-item"><a class="nav-link" href="~/Home/Index">Home</a></li>
-                    </ul>
+                    </ul>-->
                     @*<form class="form-inline mr-auto" target="_self">
                         <div class="form-group">
                             <label for="search-field"><i class="fa fa-search"></i></label><input class="form-control search-field" type="search" id="search-field" name="search">
                         </div>
                     </form>*@
-                    <a class="btn btn-light action-button" role="button" href="~/Login/Index?UserIDLogOut=@TempData["UserID"]">Log Out</a>
+                    <!--<a class="btn btn-light action-button" role="button" href="~/Login/Index?UserIDLogOut=@TempData["UserID"]">Log Out</a>
                 </div>
             </div>
         </nav>
-    </div>
+    </div>-->
 
     @RenderBody()
 
-<footer class="border-top footer text-muted">
+@*<footer class="border-top footer text-muted">
     <div class="container">
         &copy; 2021 - Buyer - IT Development -@DateTime.Now.ToString()
     </div>
-</footer>
+</footer>*@
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

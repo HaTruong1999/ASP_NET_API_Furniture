@@ -1,0 +1,282 @@
+﻿@model (List<Buyer.Mvc.Models.Product.Product> Products_guestroom,List<Buyer.Mvc.Models.Product.Product> Products_bedroom, List<Buyer.Mvc.Models.Product.Product> Products_chickenroom, Buyer.Mvc.Models.User.User User, string UserName, string UserNameErr, string Password, string PasswordErr, bool LoginFailure)
+@{
+    Layout = "_LayoutFurniture";
+    ViewData["Title"] = "Home page";
+}
+<!-- Form đăng nhập -->
+
+<div class="container-login" style="display: @(Model.LoginFailure ? "block" : "none")">
+    <div class="login">
+        <form method="post">
+            <div class="title flex j-between">
+                <p>ĐĂNG NHẬP</p>
+                <div class="close-login">
+                    <i class="fas fa-times"></i>
+                </div>
+            </div>
+            <div>
+                <input placeholder="Username" name="Username" required/>
+                <span class="text-danger">@Model.UserNameErr</span>
+            </div>
+            <div>
+                <input placeholder="Password" name="Password" type="password" required/>
+                <span class="text-danger">@Model.PasswordErr</span>
+            </div>
+            <div class="btn flex j-between">
+                <button name="login" asp-action="LoginToPage" class="show-all">ĐĂNG NHẬP</button>
+                <a href="#" class="show-all btn-open-get-pass">Quên mật khẩu</a>
+                <a href="#" class="show-all btn-login-second">ĐĂNG KÍ</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<section style="margin-top: 30px;">
+    <div class="container">
+        <div class="title-room">
+            <div class="parent-title">
+                <a href="#">Living room</a>
+            </div>
+            <span></span>
+        </div>
+        <div class="room-content flex">
+            <div class="nav-room">
+                <ul>
+                    <li><a href="#">Sofa Set</a></li>
+                    <li><a href="#">Single Sofa</a></li>
+                    <li><a href="#">Tea table</a></li>
+                    <li><a href="#">TV shelf</a></li>
+                </ul>
+                <div class="img-patent-nav">
+                    <img src="https://bizweb.dktcdn.net/100/368/970/themes/740033/assets/bn_cate.png?1586168599868"
+                         alt="phong khach" />
+                </div>
+            </div>
+
+            <div class="list-content-room">
+                <div class="row" id="listGuestroom">
+                    @foreach (var product in Model.Products_guestroom)
+                    {
+                        <div class="col-md-3 col-sm-6 col-xs-6">
+                            <div class="item-room">
+                                <a href="#">
+                                    <img src="@product.photo"
+                                         alt="sofa1" />
+                                </a>
+                                <div class="detail-purchase">
+                                    <a class="detail-purchase-item detail-purchase-item-left" href="/detail/@product.id.Trim()">Detail</a>
+                                    <a class="detail-purchase-item detail-purchase-item-right" href="#">Purchase</a>
+                                </div>
+                                <div class="title-item-room">
+                                    <h4>@product.name</h4>
+                                    <span>@product.price</span>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section style="margin-top: 30px;">
+    <div class="container">
+        <div class="title-room">
+            <div class="parent-title">
+                <a href="#">Bed room</a>
+            </div>
+            <span></span>
+        </div>
+        <div class="room-content flex j-between">
+            <div class="nav-room">
+                <ul>
+                    <li><a href="#">Modern Bed</a></li>
+                    <li><a href="#">Cabinet in front of bed</a></li>
+                    <li><a href="#">Lamp</a></li>
+                    <li><a href="#">Decorative accessories</a></li>
+                </ul>
+                <div class="img-patent-nav">
+                    <img src="https://bizweb.dktcdn.net/100/368/970/themes/740033/assets/bn_cate2.png?1586168599868"
+                         alt="phong khach" />
+                </div>
+            </div>
+
+            <div class="list-content-room">
+                <div class="row" id="listBedroom">
+                    @foreach (var product in Model.Products_bedroom)
+                    {
+                        <div class="col-md-3 col-sm-6 col-xs-6">
+                            <div class="item-room">
+                                <a href="#">
+                                    <img src="@product.photo"
+                                         alt="sofa1" />
+                                </a>
+                                <div class="detail-purchase">
+                                    <a class="detail-purchase-item detail-purchase-item-left" href="/detail/@product.id.Trim()">Detail</a>
+                                    <a class="detail-purchase-item detail-purchase-item-right" href="#">Purchase</a>
+                                </div>
+                                <div class="title-item-room">
+                                    <h4>@product.name</h4>
+                                    <span>@product.price</span>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section style="margin-top: 30px;">
+    <div class="container">
+        <div class="title-room">
+            <div class="parent-title">
+                <a href="#">Kitchen room</a>
+            </div>
+            <span></span>
+        </div>
+        <div class="room-content flex j-between">
+            <div class="nav-room">
+                <ul>
+                    <li><a href="#">Dining table and chairs</a></li>
+                    <li><a href="#">Wooden litchen cabinets</a></li>
+                    <li><a href="#">Wall cupboard</a></li>
+                    <li><a href="#">Kitchen accesories</a></li>
+                </ul>
+                <div class="img-patent-nav">
+                    <img src="https://bizweb.dktcdn.net/100/368/970/themes/740033/assets/bn_cate3.png?1586168599868"
+                         alt="phong khach" />
+                </div>
+            </div>
+
+            <div class="list-content-room">
+                <div class="row" id="listChickenroom">
+                    @foreach (var product in Model.Products_chickenroom)
+                    {
+                        <div class="col-md-3 col-sm-6 col-xs-6">
+                            <div class="item-room">
+                                <a href="#">
+                                    <img src="@product.photo"
+                                         alt="sofa1" />
+                                </a>
+                                <div class="detail-purchase">
+                                    <a class="detail-purchase-item detail-purchase-item-left" href="/detail/@product.id.Trim()">Detail</a>
+                                    <a class="detail-purchase-item detail-purchase-item-right" href="#">Purchase</a>
+                                </div>
+                                <div class="title-item-room">
+                                    <h4>@product.name</h4>
+                                    <span>@product.price</span>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@if (Model.User.username == null)
+{
+    @section Htmls_User {
+        <div class="items col-md-4 j-end">
+            <div class="logo-right flex a-center j-end">
+                <div class="login-registration flex ">
+                    <i class="fas fa-sign-in-alt"></i>
+                    <ul>
+                        <li class="btn-login">Log in</li>
+                        <li class="btn-registration">Registration</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    }
+}
+else
+{
+    @section Htmls_User {
+        <div class="items col-md-4 j-end">
+            <div class="logo-right flex a-center j-end">
+                <div class="infor-user flex j-between">
+                    <i><img src="~/image/user/hatruong.jpg" alt="photo"></i>
+                    <p>HaTruong</p>
+                </div>
+            </div>
+        </div>
+    }
+
+    @section Infor_User {
+        <div class="container-detail-user">
+            <div class="detail-user">
+                <div class="title-user flex j-center">
+                    <span></span>
+                    <div class="parent-title">
+                        <a href="#">THÔNG TIN TÀI KHOẢN</a>
+                    </div>
+                </div>
+                <div class="flex j-between">
+                    <div class="user-left">
+                        <img src="~/image/user/hatruong.jpg" alt="avatar">
+                    </div>
+                    <div class="user-right">
+                        <div class="username">
+                            <p>@Model.User.username</p>
+                        </div>
+                        <ul class="information-user">
+                            <li>
+                                Họ Tên: <p>@Model.User.fullname</p>
+                            </li>
+                            <li>
+                                Email: <p>@Model.User.email</p>
+                            </li>
+                            <li>
+                                SDT: <p>@Model.User.phone</p>
+                            </li>
+                            <li>
+                                Ngày Sinh: <p>26 / 08 / 1999</p>
+                            </li>
+                        </ul>
+                        <div class="flex j-between">
+                            <a class="btn btn-admin" href="/Manage/Index"><span>Quản lí WEB</span></a>
+                            <a class="btn btn-singout" href="~/Page/Index"><span>Đăng Xuất</span></a>
+                            <button class="btn btn-close"><span>close</span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+@section Scripts {
+    <script>
+        $(function () {
+            //mở form đăng nhập
+            $(".btn-login").click(function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $(".container-login").show(300);
+            });
+            //đóng form đăng nhập
+            $(".close-login").click(function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $(".container-login").hide(300);
+            });
+            //information-user
+            $(".infor-user").click(function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $(".container-detail-user").show(300);
+            });
+
+            $(".btn-close").click(function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $(".container-detail-user").hide(200);
+            });
+        });
+    </script>
+}
