@@ -1,9 +1,76 @@
-﻿@model (List<Buyer.Mvc.Models.Product.Product> Products_guestroom,List<Buyer.Mvc.Models.Product.Product> Products_bedroom, List<Buyer.Mvc.Models.Product.Product> Products_chickenroom, Buyer.Mvc.Models.User.User User, string UserName, string UserNameErr, string Password, string PasswordErr, bool LoginFailure)
+﻿@model (List<Buyer.Mvc.Models.DetailOrder.DetailOrder> DetailOrders, List<Buyer.Mvc.Models.Product.Product> Products_guestroom, List<Buyer.Mvc.Models.Product.Product> Products_bedroom, List<Buyer.Mvc.Models.Product.Product> Products_chickenroom, Buyer.Mvc.Models.User.User User, string UserName, string UserNameErr, string Password, string PasswordErr, bool LoginFailure)
 @{
     Layout = "_LayoutFurniture";
     ViewData["Title"] = "Home page";
 }
 <!-- Form đăng nhập -->
+@section CSS{
+    <link rel="stylesheet" href="~/css/home.css" />
+}
+
+<div class="TotalOrder">
+    <label for="nav-mobile-input" class="nav_bars-btn"><span><img width="50" src="~/image/cart-icon1.JPG" /></span></label>
+    <label class="nav_bars-btn" style="top:40%"><a href="~/History/Index"><img width="50" src="~/image/history-icon.png" /></a></label>
+    <input type="checkbox" hidden class="nav_input" id="nav-mobile-input">
+    <label for="nav-mobile-input" class="nav_overlay"></label>
+
+    <div class="nav_mobile" style="width: 50%; max-width: 50%;">
+        <label for="nav-mobile-input" class="nav_mobile_close" style="margin-left: 0px">
+            <span class="btn btn-primary btn-sm">Close</span>
+        </label>
+        <form method="post">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="infor-right">
+                        <div class="price-box flex" style="padding-left: 50%;margin-bottom: 0px">
+                            <p style="transform: translateX(-50%);" class="price">TOTAl ORDER</p>
+                        </div>
+                        <div class="infor-detail" style="margin-bottom: 0px">
+                            <table id="example" class="table table-striped table-bordered table-sm infor-table"
+                                   data-show-export="true"
+                                   data-show-toggle="true"
+                                   data-show-columns="true"
+                                   data-export-data-type="excel"
+                                   data-click-to-select="true"
+                                   data-height="450"
+                                   data-pagination="true"
+                                   data-export-types=['excel']
+                                   data-page-list="[10, 25, 50, 100, 200, All]">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th scope="col">Id</th>
+                                        <th scope="col">Id Product</th>
+                                        <th scope="col">Quantity</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="bodyTotalOrder">
+                                    @foreach (var item in Model.DetailOrders)
+                                    {
+                                        <tr>
+                                            <td>@item.id</td>
+                                            <td>@item.productId.Trim()</td>
+                                            <td>@item.quantity</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex" style="justify-content: space-between">
+                @if (Model.DetailOrders.Count > 0)
+                {
+                    <button data-orderId="@Model.DetailOrders[0].orderId" type="submit" class="btn btn-primary btn-sm" id="btnConfirmOrder">Confirm</button>
+                }
+
+                @*<div class="TotalPrice" style="margin-left: 40%">
+            <p style="margin-bottom: 0px; font-size: 16px; font-weight: 500">Total Order: <span id="totalPriceOrder">0</span></p>
+        </div>*@
+            </div>
+        </form>
+    </div>
+</div>
 
 <div class="container-login" style="display: @(Model.LoginFailure ? "block" : "none")">
     <div class="login">
@@ -15,11 +82,11 @@
                 </div>
             </div>
             <div>
-                <input placeholder="Username" name="Username" required/>
+                <input placeholder="Username" name="Username" required />
                 <span class="text-danger">@Model.UserNameErr</span>
             </div>
             <div>
-                <input placeholder="Password" name="Password" type="password" required/>
+                <input placeholder="Password" name="Password" type="password" required />
                 <span class="text-danger">@Model.PasswordErr</span>
             </div>
             <div class="btn flex j-between">
@@ -64,8 +131,11 @@
                                          alt="sofa1" />
                                 </a>
                                 <div class="detail-purchase">
-                                    <a class="detail-purchase-item detail-purchase-item-left" href="/detail/@product.id.Trim()">Detail</a>
-                                    <a class="detail-purchase-item detail-purchase-item-right" href="#">Purchase</a>
+                                    @if (Model.User.username != null)
+                                    {
+                                        <a class="detail-purchase-item detail-purchase-item-left" href="/detail/@product.id.Trim()">Detail</a>
+                                        <a class="detail-purchase-item detail-purchase-item-right" asp-action="AddToCart" asp-route-id="@product.id.Trim()">Add</a>
+                                    }
                                 </div>
                                 <div class="title-item-room">
                                     <h4>@product.name</h4>
@@ -250,6 +320,25 @@ else
     }
 }
 
+<div class="modal" id="confirmOrder" style="background-color: rgb(79 77 77 / 30%);">
+    <div class="modal-dialog">
+        <div class="modal-content" style="margin-top: 50%;">
+            <div class="modal-header">
+                <h4 class="modal-title" id="addTargetLabel">Are you sure to confirm this order?</h4>
+            </div>
+            <div class="modal-body">
+                <form method="post">
+                    <div style="display: none">
+                        <input type="number" name="OrderId" id="OrderId" style="display: none" >
+                    </div>
+                    <button asp-action="ConfirmOrder" class="btn btn-primary btn-sm">OK</button>
+                    <button id="btnCancelOrder" type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Cancel</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     <script>
         $(function () {
@@ -276,6 +365,21 @@ else
                 e.preventDefault();
                 e.stopPropagation();
                 $(".container-detail-user").hide(200);
+            });
+
+            //order
+            $("#btnConfirmOrder").click(function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $("#OrderId").val(Number($(this).attr('data-orderId')));
+
+                $("#confirmOrder").fadeIn(300);
+            });
+
+            $("#btnCancelOrder").click(function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $("#confirmOrder").fadeOut(300);
             });
         });
     </script>

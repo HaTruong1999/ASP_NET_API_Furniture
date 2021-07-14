@@ -1,4 +1,6 @@
-﻿using Buyer.Mvc.Models.Product;
+﻿using Buyer.Mvc.Models.DetailOrder;
+using Buyer.Mvc.Models.Order;
+using Buyer.Mvc.Models.Product;
 using Buyer.Mvc.Models.User;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -6,6 +8,8 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Buyer.Mvc.Controllers
@@ -23,8 +27,10 @@ namespace Buyer.Mvc.Controllers
 		public List<Product> Products_guestroom { get; set; } = new List<Product>();
 		public List<Product> Products_bedroom { get; set; } = new List<Product>();
 		public List<Product> Products_chickenroom { get; set; } = new List<Product>();
+        public List<Order> Orders { get; set; } = new List<Order>();
+        public List<DetailOrder> DetailOrders { get; set; } = new List<DetailOrder>();
 
-		public string BaseUrl = "";
+        public string BaseUrl = "";
 		public IActionResult Index(string userMain,string userName, string userNameErr, string password, string passwordErr, bool loginFailure)
 		{
             User = new User();
@@ -32,6 +38,11 @@ namespace Buyer.Mvc.Controllers
 			{
                 string BaseUrl = "http://localhost:3000/users/" + userMain.Trim();
                 User = JsonConvert.DeserializeObject<List<User>>(getdata(BaseUrl))[0];
+
+                GetOrders(userMain);
+                int tempOrderId = FindOrderID();
+                if (tempOrderId > 0)
+                    GetDetailOrders(tempOrderId);
             }
             if (!string.IsNullOrEmpty(userName))
                 UserName = userName;
@@ -45,7 +56,7 @@ namespace Buyer.Mvc.Controllers
                 LoginFailure = loginFailure;
 
             GetProducts();
-            var model = (Products_guestroom, Products_bedroom, Products_chickenroom, User, UserName, UserNameErr, Password, PasswordErr , LoginFailure);
+            var model = (DetailOrders,Products_guestroom, Products_bedroom, Products_chickenroom, User, UserName, UserNameErr, Password, PasswordErr , LoginFailure);
             return View(model);
 		}
         [HttpPost]
@@ -91,6 +102,59 @@ namespace Buyer.Mvc.Controllers
                 }
             }
         }
+        public void GetOrders(string userId)
+        {
+            string BaseUrl = "http://localhost:3000/orders/users/" + userId;
+            Orders = JsonConvert.DeserializeObject<List<Order>>(getdata(BaseUrl));
+        }
+        public void GetDetailOrders(int orderId)
+        {
+            string BaseUrl = "http://localhost:3000/OrderDetails/"+ orderId;
+            DetailOrders = JsonConvert.DeserializeObject<List<DetailOrder>>(getdata(BaseUrl));
+        }
+        //Tim Order ID
+        public int FindOrderID()
+		{
+            foreach(Order order in Orders)
+			{
+                if (!order.bought)
+                    return order.id;
+			}
+            return 0;
+		}
+        public async Task CallApiInsertOrder(String baseUrl, Order Order)
+        {
+            var httpClient = new HttpClient();
+
+            var httpRequestMessage = new HttpRequestMessage();
+            httpRequestMessage.Method = HttpMethod.Post;
+            httpRequestMessage.RequestUri = new Uri(baseUrl);
+
+            // Tạo StringContent
+            string jsoncontent = JsonConvert.SerializeObject(Order);
+            var httpContent = new StringContent(jsoncontent, Encoding.UTF8, "application/json");
+            httpRequestMessage.Content = httpContent;
+
+            var response = await httpClient.SendAsync(httpRequestMessage);
+            //var responseContent = await response.Content.ReadAsStringAsync();
+        }
+        public int FindOrderIDToAddOrder(string userId)
+        {
+            int temp = 0;
+            foreach (Order order in Orders)
+            {
+                if (order.id > temp)
+                    temp = order.id;
+                if (!order.bought)
+                    return order.id;
+            }
+            //create new order
+            Order newOrder = new Order(temp + 10, userId);
+            string BaseUrl = "http://localhost:3000/orders";
+            _ = CallApiInsertOrder(BaseUrl, newOrder);
+
+            return temp + 10;
+        }
         //CALL API
         public string getdata(String baseUrl)
         {
@@ -112,6 +176,58 @@ namespace Buyer.Mvc.Controllers
                 RedirectToPage("error", new { msg = ex.Message + " | are you missing some json keys and values? please check your json data." });
             }
             return json;
+        }
+        //Add to Cart
+        public async Task CallApiInsertOrderDetail(String baseUrl, DetailOrder detailOrder)
+        {
+            var httpClient = new HttpClient();
+
+            var httpRequestMessage = new HttpRequestMessage();
+            httpRequestMessage.Method = HttpMethod.Post;
+            httpRequestMessage.RequestUri = new Uri(baseUrl);
+
+            // Tạo StringContent
+            string jsoncontent = JsonConvert.SerializeObject(detailOrder);
+            var httpContent = new StringContent(jsoncontent, Encoding.UTF8, "application/json");
+            httpRequestMessage.Content = httpContent;
+
+            var response = await httpClient.SendAsync(httpRequestMessage);
+            //var responseContent = await response.Content.ReadAsStringAsync();
+        }
+        public void InsertOrderDetail(DetailOrder detailOrder)
+        {
+            string BaseUrl = "http://localhost:3000/OrderDetails";
+            _ = CallApiInsertOrderDetail(BaseUrl, detailOrder);
+        }
+        public IActionResult AddToCart(string Id)
+        {
+            string tempUserId = HttpContext.Session.GetString("UserMain");
+            GetOrders(tempUserId);
+            int orderId = FindOrderIDToAddOrder(tempUserId);
+            DetailOrder detailOrder = new(0, orderId, Id.Trim(), 1);
+            InsertOrderDetail(detailOrder);
+            return RedirectToAction("Index", new { userMain = tempUserId });
+        }
+        //Confirm Order
+        public async Task CallApiConfirmOrder(String baseUrl)
+        {
+            var httpClient = new HttpClient();
+
+            var httpRequestMessage = new HttpRequestMessage();
+            httpRequestMessage.Method = HttpMethod.Put;
+            httpRequestMessage.RequestUri = new Uri(baseUrl);
+
+            var response = await httpClient.SendAsync(httpRequestMessage);
+        }
+        public IActionResult ConfirmOrder(int OrderId)
+        {
+            string tempUserId = HttpContext.Session.GetString("UserMain");
+            //GetOrders(tempUserId);
+
+            string BaseUrl = "http://localhost:3000/orders/" + OrderId;
+            _ = CallApiConfirmOrder(BaseUrl);
+
+            return RedirectToAction("Index", new { userMain = tempUserId });
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿@model (List<Buyer.Mvc.Models.Product.Product> Products, List<Buyer.Mvc.Models.Producer.Producer> Producers, List<Buyer.Mvc.Models.Room.Room> Rooms, Buyer.Mvc.Models.User.User User, bool enableFormAddProduct, string idInsert,string idErr)
+﻿@model (List<Buyer.Mvc.Models.Product.Product> Products, List<Buyer.Mvc.Models.Producer.Producer> Producers, List<Buyer.Mvc.Models.Room.Room> Rooms, Buyer.Mvc.Models.User.User User, bool enableFormAddProduct, string idInsert, string idErr, bool deleteErr)
 @{
     Layout = "_LayoutFurniture";
     ViewData["Title"] = "Manage product";
@@ -13,7 +13,7 @@
                 <a style="width: 15%;" href="#">Loại Sản Phẩm</a>
                 <a style="width: 15%;" href="#">Nhà Cung Cấp</a>
             </div>
-
+            <button class="btn btn-primary" id="btnAddProduct">Thêm Sản Phẩm</button>
             <div style="font-size: 15px;" class="card rounded shadow border-0">
                 <div class="card-body p-2 bg-white rounded">
                     <table id="example" style="width:100%" class="example table table-striped table-bordered"
@@ -22,9 +22,8 @@
                            data-show-columns="true"
                            data-click-to-select="true"
                            data-height="600"
-                           data-pagination="true"
                            data-export-types=['excel']
-                           data-page-list="[10, 25, 50, 100, 200, All]">
+                           @*data-page-list="[10, 25, 50, 100, 200, All]"*@>
                         <thead>
                             <tr>
                                 <th>Mã Sản Phẩm</th>
@@ -43,16 +42,16 @@
                             @foreach (var item in Model.Products)
                             {
                                 <tr>
-                                    <td>@item.id</td>
-                                    <td><img style="max-width: 40px;" src="@item.photo" alt=""></td>
-                                    <td>@item.name</td>
+                                    <td>@item.id.Trim()</td>
+                                    <td data-image="@item.photo.Trim()"><img style="max-width: 40px;" src="@item.photo" alt=""></td>
+                                    <td>@item.name.Trim()</td>
                                     <td>@item.price</td>
                                     <td>@item.oldPrice</td>
                                     <td>@item.amount</td>
-                                    <td>@item.roomId</td>
-                                    <td>@item.producerId</td>
-                                    <td><a style="font-size: 17px;" href="/shop/nhaptargetvstraffic?handler=EditTarget" class="btn btn-primary btn-sm btnEdit" data-id="@item.id">Edit</a></td>
-                                    <td><a style="font-size: 17px;" href="#" class="btn btn-primary btn-sm btnDelete" data-id="@item.id">Delete</a></td>
+                                    <td>@item.roomId.Trim()</td>
+                                    <td>@item.producerId.Trim()</td>
+                                    <td><button style="font-size: 17px;" class="btn btn-primary btn-sm btnEdit" data-id="@item.id.Trim()">Edit</button></td>
+                                    <td><button style="font-size: 17px;" class="btn btn-primary btn-sm btnDelete" data-id="@item.id.Trim()">Delete</button></td>
                                 </tr>
                             }
                         </tbody>
@@ -63,56 +62,143 @@
     </div>
 </section>
 
-<div class="form-product" style="display: @(Model.enableFormAddProduct ? "block" : "none")">
-        <div class="registration">
-            <form method="post">
-                <div class="title flex j-between">
-                    <p>THÔNG TIN SẢN PHẨM</p>
-                    <div class="close-form-product">
-                        <i class="fas fa-times"></i>
-                    </div>
-                </div>
-                <div>
-                    <input asp-for="@Model.idInsert" name="id" type="text" placeholder="Mã sản phẩm" required>
-                    <span style="color:red">@Model.idErr</span>
-                </div>
-                <div>
-                    <input name="name" type="text" placeholder="Tên sản phẩm" required>
-                </div>
-                <div>
-                    <input name="price" type="text" placeholder="Giá" required>
-                </div>
-                <div>
-                    <input name="oldPrice" type="text" placeholder="Giá Cũ" required>
-                </div>
-                <div>
-                    <input name="photo" type="text" placeholder="link ảnh sản phẩm" required>
-                </div>
-                <div>
-                    <input name="amount" type="text" placeholder="Số lượng tồn" required>
-                </div>
-                <div>
-                    <select name="roomId" type="text" placeholder="Id loại sản phẩm">
-                        @foreach (var item in Model.Rooms)
-                        {
+<div id="formInsert" class="form-product" style="display: @(Model.enableFormAddProduct ? "block" : "none")">
+    <div class="registration">
+        <form method="post">
+            <div class="title flex j-between">
+                <p>THÔNG TIN SẢN PHẨM</p>
+            </div>
+            <div>
+                <input asp-for="@Model.idInsert" name="id" type="text" placeholder="Mã sản phẩm" required>
+                <span style="color:red">@Model.idErr</span>
+            </div>
+            <div>
+                <input name="name" type="text" placeholder="Tên sản phẩm" required>
+            </div>
+            <div>
+                <input name="price" type="text" placeholder="Giá" required>
+            </div>
+            <div>
+                <input name="oldPrice" type="text" placeholder="Giá Cũ" required>
+            </div>
+            <div>
+                <input name="photo" type="text" placeholder="link ảnh sản phẩm" required>
+            </div>
+            <div>
+                <input name="amount" type="text" placeholder="Số lượng tồn" required>
+            </div>
+            <div>
+                <p>Loại sản phẩm: </p>
+                <select name="roomId" type="text" placeholder="Id loại sản phẩm" style="width: 50%;margin-top: 5px;margin-bottom: 5px">
+                    @foreach (var item in Model.Rooms)
+                    {
                         <option value="@item.id.Trim()">@item.id.Trim() - @item.name.Trim()</option>
-                        }
-                    </select>
-                </div>
-                <div>
-                    <select name="producerId" type="text" placeholder="Id nhà cung cấp">
-                        @foreach (var item in Model.Producers)
-                        {
-                            <option value="@item.id.Trim()">@item.id.Trim() - @item.name.Trim()</option>
-                        }
-                    </select>
-                </div>
-                <div class="btn flex j-center">
-                    <button asp-action="InsertProduct" class="show-all btn-registration-second">THÊM SẢN PHẨM</button>
-                </div>
-            </form>
+                    }
+                </select>
+            </div>
+            <div>
+                <p>Nhà cung cấp: </p>
+                <select name="producerId" type="text" placeholder="Id nhà cung cấp" style="width: 50%;margin-top: 5px;margin-bottom: 5px">
+                    @foreach (var item in Model.Producers)
+                    {
+                        <option value="@item.id.Trim()">@item.id.Trim() - @item.name.Trim()</option>
+                    }
+                </select>
+            </div>
+            <div class="btn flex j-center">
+                <button asp-action="InsertProduct" class="show-all btn-registration-second mr-3">THÊM SẢN PHẨM</button>
+                <button class="show-all btn-registration-second" id="closeInsertForm">Close</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="formEdit" class="form-product" style="display: @(Model.enableFormAddProduct ? "block" : "none")">
+    <div class="registration">
+        <form method="post">
+            <div class="title flex j-between">
+                <p>THÔNG TIN SẢN PHẨM</p>
+            </div>
+            <div style="display: none">
+                <input id="idEdit" name="id" type="text" value="">
+            </div>
+            <div>
+                <input id="idToEdit" type="text" disabled>
+            </div>
+            <div>
+                <input id="nameEdit" name="name" type="text" placeholder="Tên sản phẩm" required>
+            </div>
+            <div>
+                <input id="priceEdit" name="price" type="number" placeholder="Giá" required>
+            </div>
+            <div>
+                <input id="oldPriceEdit" name="oldPrice" type="number" placeholder="Giá Cũ" required>
+            </div>
+            <div>
+                <input id="photoEdit" name="photo" type="text" placeholder="link ảnh sản phẩm" required>
+            </div>
+            <div>
+                <input id="amountEdit" name="amount" type="number" placeholder="Số lượng tồn" required>
+            </div>
+            <div>
+                <p>Loại sản phẩm: </p>
+                <select name="roomId" type="text" placeholder="Id loại sản phẩm" style="width: 50%;margin-top: 5px;margin-bottom: 5px"> 
+                    <option id="roomIdEdit" selected></option>
+                    @foreach (var item in Model.Rooms)
+                    {
+                        <option value="@item.id.Trim()">@item.id.Trim() - @item.name.Trim()</option>
+                    }
+                </select>
+            </div>
+            <div>
+                <p>Nhà cung cấp: </p>
+                <select name="producerId" type="text" placeholder="Id nhà cung cấp" style="width: 50%;margin-top: 5px;margin-bottom: 5px">
+                    <option id="producerIdEdit" selected></option>
+                    @foreach (var item in Model.Producers)
+                    {
+                        <option value="@item.id.Trim()">@item.id.Trim() - @item.name.Trim()</option>
+                    }
+                </select>
+            </div>
+            <div class="btn flex j-center">
+                <button asp-action="EditProduct" class="show-all btn-registration-second mr-3">Lưu Thay Đổi</button>
+                <button class="show-all btn-registration-second" id="closeEditForm">Close</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal" id="confirmDelete" style="background-color: rgb(79 77 77 / 30%);">
+    <div class="modal-dialog">
+        <div class="modal-content" style="margin-top: 50%;">
+            <div class="modal-header">
+                <h4 class="modal-title" id="addTargetLabel">Bạn có chắc chắn muốn xóa sản phẩm này?</h4>
+            </div>
+            <div class="modal-body">
+                <form method="post">
+                    <input id="idToDelete" name="id" style="display: none" />
+                    <button asp-action="DeleteProduct" class="btn btn-primary btn-sm">OK</button>
+                    <button id="btnCloseDelete" type="button" class="btn btn-danger btn-sm">Close</button>
+                </form>
+            </div>
         </div>
     </div>
+</div>
+
+<div id="DeleteErr" style="display:@(Model.deleteErr? "block" : "none") ;background-color: rgb(79 77 77 / 30%);">
+    <div class="modal-dialog">
+        <div class="modal-content" style="margin-top: 50%;">
+            <div class="modal-header">
+                <h4 class="modal-title" id="addTargetLabel">Sản phẩm đã tồn tại trong đơn hàng, không thể xóa!</h4>
+            </div>
+            <div class="modal-body">
+                <form method="post">
+                    <button id="btnCloseDeleteErr" type="button" class="btn btn-danger btn-sm">Close</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 @if (Model.User.username == null)
 {
@@ -221,36 +307,75 @@ else
                 e.stopPropagation();
                 $(".container-detail-user").hide(200);
             });
-            //manage-page
-            //$("#manage-product").click(function (e) {
-            //    e.preventDefault();
-            //    e.stopPropagation();
-            //    $(".manage-user").hide(300);
-            //    $(".manage-product").show(300);
-            //    $(this).css("background-color", "red");
-            //    $("#manage-user").css("background-color", " #ff7600");
-            //});
 
-            //$("#manage-user").click(function (e) {
-            //    e.preventDefault();
-            //    e.stopPropagation();
-            //    $(".manage-product").hide(300);
-            //    $(".manage-user").show(300);
-            //    $(this).css("background-color", "red");
-            //    $("#manage-product").css("background-color", " #ff7600");
-            //});
             //form-add-product
-            $(".btn-add-product").click(function (e) {
+            $("#btnAddProduct").click(function (e) {
                 e.preventDefault();
                 e.stopPropagation();
-                $(".form-product").show(300);
+                $("#formInsert").show(300);
             });
 
-            $(".close-form-product").click(function (e) {
+            $("#closeInsertForm").click(function (e) {
                 e.preventDefault();
                 e.stopPropagation();
-                $(".form-product").hide(300);
+                $("#formInsert").hide(300);
             });
+
+            //deleteproduct
+            $(".btnDelete").on("click", function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $("#idToDelete").val($(this).attr('data-id'));
+                $("#confirmDelete").show(300);
+            });
+
+            $("#btnCloseDelete").click(function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $("#confirmDelete").hide(300);
+            });
+
+            $("#btnCloseDeleteErr").click(function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $("#DeleteErr").hide(300);
+            });
+
+            //form-edit-product
+            $(".btnEdit").click(function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                let id = $(this).parents('td').siblings().eq(0)[0].innerHTML;
+                let photo = $(this).parents('td').siblings().eq(1).attr('data-image');
+                let name = $(this).parents('td').siblings().eq(2)[0].innerHTML;
+                let price = Number($(this).parents('td').siblings().eq(3)[0].innerHTML);
+                let oldPrice = Number($(this).parents('td').siblings().eq(4)[0].innerHTML);
+                let amount = Number($(this).parents('td').siblings().eq(5)[0].innerHTML);
+                let roomId = $(this).parents('td').siblings().eq(6)[0].innerHTML;
+                let prooductId = $(this).parents('td').siblings().eq(7)[0].innerHTML;
+
+                $('#idEdit').attr('value', id);
+                $('#idToEdit').attr('value', id);
+                $('#photoEdit').attr('value', photo);
+                $('#nameEdit').attr('value', name);
+                $('#priceEdit').attr('value', price);
+                $('#oldPriceEdit').attr('value', oldPrice);
+                $('#amountEdit').attr('value', amount);
+                $('#roomIdEdit').attr('value', roomId);
+                $('#roomIdEdit').text(roomId);
+                $('#producerIdEdit').attr('value', prooductId);
+                $('#producerIdEdit').text(prooductId);
+
+                $("#formEdit").show(300);
+            });
+
+            $("#closeEditForm").click(function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $("#formEdit").hide(300);
+            });
+
         });
     </script>
 }

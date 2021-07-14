@@ -46,10 +46,10 @@
     margin: 20px auto;
 }
 
-section {
+/*section {
     padding-left: 10%;
     padding-right: 10%;
-}
+}*/
 
 .container1 {
     padding: 10px 10px;
@@ -539,4 +539,9 @@ table td {
 
 .currency:after {
     content: '.00';
+}
+
+session {
+    padding-left: 0;
+    padding-right: 0;
 }
