@@ -18,5 +18,9 @@ namespace Buyer.Mvc.Models.DetailOrder
 			this.productId = productId;
 			this.quantity = quantity;
 		}
+
+		public DetailOrder()
+		{
+		}
 	}
 }

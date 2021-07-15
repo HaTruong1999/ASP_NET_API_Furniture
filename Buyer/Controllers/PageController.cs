@@ -136,7 +136,7 @@ namespace Buyer.Mvc.Controllers
             httpRequestMessage.Content = httpContent;
 
             var response = await httpClient.SendAsync(httpRequestMessage);
-            //var responseContent = await response.Content.ReadAsStringAsync();
+            var responseContent = await response.Content.ReadAsStringAsync();
         }
         public int FindOrderIDToAddOrder(string userId)
         {
@@ -192,19 +192,57 @@ namespace Buyer.Mvc.Controllers
             httpRequestMessage.Content = httpContent;
 
             var response = await httpClient.SendAsync(httpRequestMessage);
-            //var responseContent = await response.Content.ReadAsStringAsync();
+            var responseContent = await response.Content.ReadAsStringAsync();
         }
         public void InsertOrderDetail(DetailOrder detailOrder)
         {
             string BaseUrl = "http://localhost:3000/OrderDetails";
             _ = CallApiInsertOrderDetail(BaseUrl, detailOrder);
         }
+        public async Task CallApiUpdateOrderDetail(String baseUrl, DetailOrder detailOrder)
+        {
+            var httpClient = new HttpClient();
+
+            var httpRequestMessage = new HttpRequestMessage();
+            httpRequestMessage.Method = HttpMethod.Put;
+            httpRequestMessage.RequestUri = new Uri(baseUrl);
+
+            // Tạo StringContent
+            string jsoncontent = JsonConvert.SerializeObject(detailOrder);
+            var httpContent = new StringContent(jsoncontent, Encoding.UTF8, "application/json");
+            httpRequestMessage.Content = httpContent;
+
+            var response = await httpClient.SendAsync(httpRequestMessage);
+            var responseContent = await response.Content.ReadAsStringAsync();
+        }
+        public void UpdateOrderDetail(DetailOrder detailOrder)
+        {
+            string BaseUrl = "http://localhost:3000/OrderDetails/"+ detailOrder.id;
+            _ = CallApiUpdateOrderDetail(BaseUrl, detailOrder);
+        }
+        public DetailOrder CheckExitsProduct(int orderId, string productId)
+		{
+            GetDetailOrders(orderId);
+            foreach (DetailOrder d in DetailOrders)
+                if (d.productId.Trim().Equals(productId))
+                    return d;
+            return new DetailOrder();
+        }
         public IActionResult AddToCart(string Id)
         {
             string tempUserId = HttpContext.Session.GetString("UserMain");
             GetOrders(tempUserId);
             int orderId = FindOrderIDToAddOrder(tempUserId);
+
+            DetailOrder tempDetailOrder = CheckExitsProduct(orderId, Id);
+            if (tempDetailOrder.quantity > 0)
+			{
+                tempDetailOrder.quantity = tempDetailOrder.quantity + 1;
+                UpdateOrderDetail(tempDetailOrder);
+                return RedirectToAction("Index", new { userMain = tempUserId });
+            }
             DetailOrder detailOrder = new(0, orderId, Id.Trim(), 1);
+
             InsertOrderDetail(detailOrder);
             return RedirectToAction("Index", new { userMain = tempUserId });
         }
@@ -218,6 +256,7 @@ namespace Buyer.Mvc.Controllers
             httpRequestMessage.RequestUri = new Uri(baseUrl);
 
             var response = await httpClient.SendAsync(httpRequestMessage);
+            var responseContent = await response.Content.ReadAsStringAsync();
         }
         public IActionResult ConfirmOrder(int OrderId)
         {

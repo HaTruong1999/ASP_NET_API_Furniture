@@ -77,7 +77,7 @@ namespace Buyer.Mvc.Controllers
             httpRequestMessage.Content = httpContent;
 
             var response = await httpClient.SendAsync(httpRequestMessage);
-            //var responseContent = await response.Content.ReadAsStringAsync();
+            var responseContent = await response.Content.ReadAsStringAsync();
         }
         [HttpPost]
         public IActionResult InsertProduct(string id , string name , float price, float oldPrice, string photo, int amount, string roomId, string producerId)
@@ -109,7 +109,7 @@ namespace Buyer.Mvc.Controllers
             httpRequestMessage.RequestUri = new Uri(baseUrl);
 
             var response = await httpClient.SendAsync(httpRequestMessage);
-            //var responseContent = await response.Content.ReadAsStringAsync();
+            var responseContent = await response.Content.ReadAsStringAsync();
         }
         [HttpPost]
         public IActionResult DeleteProduct(string id)
@@ -145,7 +145,7 @@ namespace Buyer.Mvc.Controllers
             httpRequestMessage.Content = httpContent;
 
             var response = await httpClient.SendAsync(httpRequestMessage);
-            //var responseContent = await response.Content.ReadAsStringAsync();
+            var responseContent = await response.Content.ReadAsStringAsync();
         }
         [HttpPost]
         public IActionResult EditProduct(string id, string name, float price, float oldPrice, string photo, int amount, string roomId, string producerId)

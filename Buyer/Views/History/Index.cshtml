@@ -31,8 +31,8 @@ else
         <div class="items col-md-4 j-end">
             <div class="logo-right flex a-center j-end">
                 <div class="infor-user flex j-between">
-                    <i><img src="~/image/user/hatruong.jpg" alt="photo"></i>
-                    <p>HaTruong</p>
+                    <i><img src="~/image/user/@Model.User.photo.Trim()" alt="photo"></i>
+                    <p>@Model.User.username.Trim()</p>
                 </div>
             </div>
         </div>
@@ -49,7 +49,7 @@ else
                 </div>
                 <div class="flex j-between">
                     <div class="user-left">
-                        <img src="~/image/user/hatruong.jpg" alt="avatar">
+                        <img src="~/image/user/@Model.User.photo.Trim()" alt="avatar">
                     </div>
                     <div class="user-right">
                         <div class="username">
