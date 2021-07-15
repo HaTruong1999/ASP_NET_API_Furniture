@@ -14,5 +14,6 @@ namespace Buyer.Mvc.Models.User
         public string email { get; set; }
         public string phone { get; set; }
         public string address { get; set; }
+        public bool admin { get; set; }
     }
 }

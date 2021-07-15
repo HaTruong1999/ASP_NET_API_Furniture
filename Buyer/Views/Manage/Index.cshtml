@@ -10,10 +10,11 @@
             <div class="nav-manage flex j-center">
                 <a id="manage-product" style="width: 15%;" href="#">Sản Phẩm</a>
                 <a id="manage-user" style="width: 15%;" href="~/Manage/ManageUser">Tài Khoản</a>
-                <a style="width: 15%;" href="#">Loại Sản Phẩm</a>
+                <a style="width: 15%;" href="~/History/Index">Đơn Hàng</a>
                 <a style="width: 15%;" href="#">Nhà Cung Cấp</a>
             </div>
-            <button class="btn btn-primary" id="btnAddProduct">Thêm Sản Phẩm</button>
+            <a style="font-size: 17px;" class="btn btn-primary"href="~/Page/Index?userMain=@Model.User.username.Trim()">Back To Home</a>
+            <button style="font-size: 17px;" class="btn btn-primary" id="btnAddProduct">Thêm Sản Phẩm</button>
             <div style="font-size: 15px;" class="card rounded shadow border-0">
                 <div class="card-body p-2 bg-white rounded">
                     <table id="example" style="width:100%" class="example table table-striped table-bordered"
@@ -185,7 +186,7 @@
     </div>
 </div>
 
-<div id="DeleteErr" style="display:@(Model.deleteErr? "block" : "none") ;background-color: rgb(79 77 77 / 30%);">
+<div class="modal" id="DeleteErr" style="display:@(Model.deleteErr == true ? "block" : "none") ;background-color: rgb(79 77 77 / 30%);">
     <div class="modal-dialog">
         <div class="modal-content" style="margin-top: 50%;">
             <div class="modal-header">

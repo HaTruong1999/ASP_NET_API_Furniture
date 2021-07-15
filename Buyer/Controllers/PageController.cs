@@ -156,7 +156,7 @@ namespace Buyer.Mvc.Controllers
             return temp + 10;
         }
         //CALL API
-        public string getdata(String baseUrl)
+        public string getdata(string baseUrl)
         {
             string json = null;
             try

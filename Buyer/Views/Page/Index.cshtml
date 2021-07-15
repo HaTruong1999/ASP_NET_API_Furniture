@@ -9,8 +9,11 @@
 }
 
 <div class="TotalOrder">
-    <label for="nav-mobile-input" class="nav_bars-btn"><span><img width="50" src="~/image/cart-icon1.JPG" /></span></label>
-    <label class="nav_bars-btn" style="top:40%"><a href="~/History/Index"><img width="50" src="~/image/history-icon.png" /></a></label>
+    @if (Model.User.username != null)
+    {
+        <label for="nav-mobile-input" class="nav_bars-btn"><span><img width="50" src="~/image/cart-icon1.JPG" /></span></label>
+        <label class="nav_bars-btn" style="top:40%"><a href="~/History/Index"><img width="50" src="~/image/history-icon.png" /></a></label>
+    }
     <input type="checkbox" hidden class="nav_input" id="nav-mobile-input">
     <label for="nav-mobile-input" class="nav_overlay"></label>
 
@@ -65,8 +68,8 @@
                 }
 
                 @*<div class="TotalPrice" style="margin-left: 40%">
-            <p style="margin-bottom: 0px; font-size: 16px; font-weight: 500">Total Order: <span id="totalPriceOrder">0</span></p>
-        </div>*@
+                        <p style="margin-bottom: 0px; font-size: 16px; font-weight: 500">Total Order: <span id="totalPriceOrder">0</span></p>
+                    </div>*@
             </div>
         </form>
     </div>
@@ -176,22 +179,25 @@
                 <div class="row" id="listBedroom">
                     @foreach (var product in Model.Products_bedroom)
                     {
-                        <div class="col-md-3 col-sm-6 col-xs-6">
-                            <div class="item-room">
-                                <a href="#">
-                                    <img src="@product.photo"
-                                         alt="sofa1" />
-                                </a>
-                                <div class="detail-purchase">
+                    <div class="col-md-3 col-sm-6 col-xs-6">
+                        <div class="item-room">
+                            <a href="#">
+                                <img src="@product.photo"
+                                     alt="sofa1" />
+                            </a>
+                            <div class="detail-purchase">
+                                @if (Model.User.username != null)
+                                {
                                     <a class="detail-purchase-item detail-purchase-item-left" href="/detail/@product.id.Trim()">Detail</a>
-                                    <a class="detail-purchase-item detail-purchase-item-right" href="#">Purchase</a>
-                                </div>
-                                <div class="title-item-room">
-                                    <h4>@product.name</h4>
-                                    <span>@product.price</span>
-                                </div>
+                                    <a class="detail-purchase-item detail-purchase-item-right" asp-action="AddToCart" asp-route-id="@product.id.Trim()">Add</a>
+                                }
+                            </div>
+                            <div class="title-item-room">
+                                <h4>@product.name</h4>
+                                <span>@product.price</span>
                             </div>
                         </div>
+                    </div>
                     }
                 </div>
             </div>
@@ -225,22 +231,25 @@
                 <div class="row" id="listChickenroom">
                     @foreach (var product in Model.Products_chickenroom)
                     {
-                        <div class="col-md-3 col-sm-6 col-xs-6">
-                            <div class="item-room">
-                                <a href="#">
-                                    <img src="@product.photo"
-                                         alt="sofa1" />
-                                </a>
-                                <div class="detail-purchase">
+                    <div class="col-md-3 col-sm-6 col-xs-6">
+                        <div class="item-room">
+                            <a href="#">
+                                <img src="@product.photo"
+                                     alt="sofa1" />
+                            </a>
+                            <div class="detail-purchase">
+                                @if (Model.User.username != null)
+                                {
                                     <a class="detail-purchase-item detail-purchase-item-left" href="/detail/@product.id.Trim()">Detail</a>
-                                    <a class="detail-purchase-item detail-purchase-item-right" href="#">Purchase</a>
-                                </div>
-                                <div class="title-item-room">
-                                    <h4>@product.name</h4>
-                                    <span>@product.price</span>
-                                </div>
+                                    <a class="detail-purchase-item detail-purchase-item-right" asp-action="AddToCart" asp-route-id="@product.id.Trim()">Add</a>
+                                }
+                            </div>
+                            <div class="title-item-room">
+                                <h4>@product.name</h4>
+                                <span>@product.price</span>
                             </div>
                         </div>
+                    </div>
                     }
                 </div>
             </div>
@@ -309,7 +318,10 @@ else
                             </li>
                         </ul>
                         <div class="flex j-between">
-                            <a class="btn btn-admin" href="/Manage/Index"><span>Quản lí WEB</span></a>
+                            @if (Model.User.admin)
+                            {
+                                <a class="btn btn-admin" href="/Manage/Index"><span>Quản lí WEB</span></a>
+                            }
                             <a class="btn btn-singout" href="~/Page/Index"><span>Đăng Xuất</span></a>
                             <button class="btn btn-close"><span>close</span></button>
                         </div>

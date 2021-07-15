@@ -1,51 +1,119 @@
-﻿@model (Buyer.Mvc.Models.OrderHeader OrderHeader, List<Buyer.Mvc.Models.OrderLine> ListOrderLine)
+﻿@model (Buyer.Mvc.Models.Order.Order Order, List<Buyer.Mvc.Models.DetailOrder.DetailOrder> DetailOrders, Buyer.Mvc.Models.User.User User, int totalQuantity)
 @{
-    ViewData["Title"] = "Home Page";
+    Layout = "_LayoutFurniture";
+    ViewData["Title"] = "Detail Order";
 }
 @using System.Globalization;
 
-<section style=";margin-left: 5%; margin-right: 5%;">
+@if (Model.User.username == null)
+{
+    @section Htmls_User {
+        <div class="items col-md-4 j-end">
+            <div class="logo-right flex a-center j-end">
+                <div class="login-registration flex ">
+                    <i class="fas fa-sign-in-alt"></i>
+                    <ul>
+                        <li class="btn-login">Log in</li>
+                        <li class="btn-registration">Registration</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    }
+}
+else
+{
+    @section Htmls_User {
+        <div class="items col-md-4 j-end">
+            <div class="logo-right flex a-center j-end">
+                <div class="infor-user flex j-between">
+                    <i><img src="~/image/user/hatruong.jpg" alt="photo"></i>
+                    <p>HaTruong</p>
+                </div>
+            </div>
+        </div>
+    }
+
+    @section Infor_User {
+        <div class="container-detail-user">
+            <div class="detail-user">
+                <div class="title-user flex j-center">
+                    <span></span>
+                    <div class="parent-title">
+                        <a href="#">THÔNG TIN TÀI KHOẢN</a>
+                    </div>
+                </div>
+                <div class="flex j-between">
+                    <div class="user-left">
+                        <img src="~/image/user/hatruong.jpg" alt="avatar">
+                    </div>
+                    <div class="user-right">
+                        <div class="username">
+                            <p>@Model.User.username</p>
+                        </div>
+                        <ul class="information-user">
+                            <li>
+                                Họ Tên: <p>@Model.User.fullname</p>
+                            </li>
+                            <li>
+                                Email: <p>@Model.User.email</p>
+                            </li>
+                            <li>
+                                SDT: <p>@Model.User.phone</p>
+                            </li>
+                            <li>
+                                Ngày Sinh: <p>26 / 08 / 1999</p>
+                            </li>
+                        </ul>
+                        <div class="flex j-between">
+                            @if (Model.User.admin)
+                            {
+                                <a class="btn btn-admin" href="/Manage/Index"><span>Quản lí WEB</span></a>
+                            }
+                            <a class="btn btn-singout" href="~/Page/Index"><span>Đăng Xuất</span></a>
+                            <button class="btn btn-close"><span>close</span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+<section style="margin-left: 10%; margin-right: 10%;">
     <div class="container1" style="padding: 10px 10px; box-shadow: 5px 5px 10px 5px #b0b0b0; border-radius: 10px; padding: 30px; margin-top: 10px; margin-bottom: 20px">
         <div class="title" style="text-align: center;"><h1 class="text text-secondary">Chi Tiết Đơn Hàng</h1></div>
         <div class="HeaderDetailOrder" style="border: 1px solid #dee2e6; border-radius: 10px; padding: 10px 40px; box-shadow: 3px 6px 3px 6px #d6d2d2; margin-bottom: 30px">
             <div class="form-group mb-4" style="color: #333; font-size:16px">
                 <div class="form-row p-1 mb-4">
                     <div class="col">
-                        <a><span>Order ID:  </span>@Model.OrderHeader.OrderID</a>
+                        <a><span>Order ID:  </span>@Model.Order.id</a>
                     </div>
                     <div class="col">
-                        <a><span>Quantity:  </span>@String.Format(CultureInfo.InvariantCulture, "{0:0,0}", Model.OrderHeader.Quantity)</a>
-                    </div>
-                </div>
-                <div class="form-row p-1 mb-4">
-                    <div class="col">
-                        <a><span>Status:  </span>@Model.OrderHeader.Status</a>
-                    </div>
-                    <div class="col">
-                        <a><span>Total Amount:  </span>@String.Format(CultureInfo.InvariantCulture, "{0:0,0}", Model.OrderHeader.TotalAmount)</a>
+                        <a><span>Quantity:  </span>@Model.totalQuantity</a>
                     </div>
                 </div>
                 <div class="form-row p-1 mb-4">
                     <div class="col">
-                        <a><span>Date Order:  </span>@Model.OrderHeader.OrderDate</a>
+                        <a><span>Status:  </span>@Model.Order.status</a>
                     </div>
                     <div class="col">
-                        <a><span>Last Changed Date:  </span>@Model.OrderHeader.LastChangedDate</a>
+                        <a><span>Date Order:  </span>@Model.Order.date</a>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div style="margin-left: 50%;transform: translateX(-50%); width: 50%; padding-top: 20px; padding-left: 20px;display: @(Model.OrderHeader.Status.Equals("Canceled")? "none" : "block")">
+        <div style="margin-left: 50%;transform: translateX(-50%); width: 50%; padding-top: 20px; padding-left: 20px;display: @(Model.Order.status.Trim().Equals("Canceled")? "none" : "block")">
             <div class="position-relative mb-5">
                 <div class="progress" style="height: 4px;">
-                    <div class="progress-bar" role="progressbar" style="width: @(Model.OrderHeader.Status.Equals("Ordered")? "33%" : Model.OrderHeader.Status.Equals("Confirmed")? "66%" : "100%");" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                    <div class="progress-bar" role="progressbar" style="width: @(Model.Order.status.Trim().Equals("Ordered")? "33%" : Model.Order.status.Trim().Equals("Confirmed")? "66%" : "100%");" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
                 <button class="position-absolute btn btn-sm btn-primary rounded-pill" style="width: 2rem; height: 2rem; top: 0 !important; transform: translate(-50%,-50%) !important;">1</button>
                 <span class="position-absolute" style="top: 35px !important; transform: translate(-50%,-50%) !important; border-bottom: 1px solid">New</span>
                 <button class="position-absolute btn btn-sm btn-primary rounded-pill" style="width: 2rem; height: 2rem; left: 33% !important; top: 0 !important; transform: translate(-50%,-50%) !important;">2</button>
                 <span class="position-absolute" style="left: 33% !important; top: 35px !important; transform: translate(-50%,-50%) !important; border-bottom: 1px solid">Ordered</span>
-                @if (Model.OrderHeader.Status.Equals("Confirmed") || Model.OrderHeader.Status.Equals("Completed"))
+                @if (Model.Order.status.Trim().Equals("Confirmed") || Model.Order.status.Trim().Equals("Completed"))
                 {
                     <button class="position-absolute btn btn-sm btn-primary rounded-pill" style="width: 2rem; height: 2rem; left: 66% !important; top: 0 !important; transform: translate(-50%,-50%) !important;">3</button>
                 }
@@ -54,7 +122,7 @@
                     <button class="position-absolute btn btn-sm btn-secondary rounded-pill" style="width: 2rem; height: 2rem; left: 66% !important; top: 0 !important; transform: translate(-50%,-50%) !important;">3</button>
                 }
                 <span class="position-absolute" style="left: 66% !important; top: 35px !important; transform: translate(-50%,-50%) !important; border-bottom: 1px solid">Confirmed</span>
-                @if (Model.OrderHeader.Status.Equals("Completed"))
+                @if (Model.Order.status.Trim().Equals("Completed"))
                 {
                     <button class="position-absolute btn btn-sm btn-primary rounded-pill" style="width: 2rem; height: 2rem; left: 100% !important; top: 0 !important; transform: translate(-50%,-50%) !important;">4</button>
                 }
@@ -68,23 +136,36 @@
 
         <form method="post" style="padding-top: 20px">
             <div class="flex" style="margin-bottom: -40px">
+                <a class="btn btn-primary mr-5" href="/Page/Index?userMain=@Model.User.username.Trim()">Continue Shopping</a>
                 <a class="btn btn-primary mr-5" asp-action="Index">Back To List Order</a>
-                @if (Model.OrderHeader.Status.Equals("Canceled"))
+                @if (Model.Order.status.Trim().Equals("Canceled"))
                 {
                     <p style="color:red">*Đơn hàng đã bị hủy!</p>
                 }
-                else if (Model.OrderHeader.Status.Equals("Comfirmed"))
+                else if (Model.Order.status.Trim().Equals("Confirmed"))
                 {
-                    <p style="color:red">*Đơn hàng đang được xử lí!</p>
+                    @if (Model.User.admin)
+                    {
+                        <button data-OrderID="@Model.Order.id" class="btn btn-primary mr-5" id="btnCompleteOrder">Complete</button>
+                    }
+                    else
+                    {
+                        <p style="color:red">*Đơn hàng đang được xử lí!</p>
+                    }
                 }
-                else if (Model.OrderHeader.Status.Equals("Completed"))
+                else if (Model.Order.status.Trim().Equals("Completed"))
                 {
                     <p style="color:red">*Đơn hàng đã được xử lí!</p>
                 }
                 else
                 {
-                    <button data-OrderID="@Model.OrderHeader.OrderID" class="btn btn-primary" id="btnCancelOrder">Cancel Order</button>
+                    @if (Model.User.admin)
+                    {
+                        <button data-OrderID="@Model.Order.id" class="btn btn-primary mr-5" id="btnConfirmOrder">Confirm</button>
+                    }
+                    <button data-OrderID="@Model.Order.id" class="btn btn-primary" id="btnCancelOrder">Cancel Order</button>
                 }
+
             </div>
             <table id="example1" class="table table-striped table-bordered table-sm infor-table"
                    data-show-export="true"
@@ -98,30 +179,18 @@
                    data-page-list="[10, 25, 50, 100, 200, All]">
                 <thead class="thead-dark">
                     <tr>
-                        <th scope="col">Item Code</th>
-                        <th scope="col">Sample</th>
-                        <th scope="col">Color</th>
-                        <th scope="col">Color Sample</th>
-                        <th scope="col">Size</th>
-                        <th scope="col">Sale Price</th>
-                        <th scope="col">Retail Price</th>
+                        <th scope="col">Id</th>
+                        <th scope="col">Product Id</th>
                         <th scope="col">Quantity</th>
                     </tr>
                 </thead>
                 <tbody id="bodyTotalOrder">
-                    @foreach (var item in Model.ListOrderLine)
+                    @foreach (var item in Model.DetailOrders)
                     {
                         <tr>
-                            <td>@item.ItemCode</td>
-                            @*<td data-image="@item.URLPicture.Trim()"><img width="30" src="http://192.168.169.240/images/products/@item.URLPicture.Trim()" /></td>*@
-                            
-                            <td>@item.ColorCode @item.ColorName</td>
-                            @*<td data-image="@item.URLColor.Trim()"><img width="30" src="http://192.168.169.240/images/colors/@item.URLColor" /></td>*@
-                            
-                            <td>@item.Size</td>
-                            <td data-FOBPrice="@item.FOBPrice">@String.Format(CultureInfo.InvariantCulture, "{0:0,0}", item.FOBPrice) @item.Currency</td>
-                            <td data-RetailPrice="@item.RetailPrice">@item.RetailPrice @item.CurrencyRetail</td>
-                            <td>@item.Quantity</td>
+                            <td>@item.id</td>
+                            <td>@item.productId</td>
+                            <td>@item.quantity</td>
                         </tr>
                     }
                 </tbody>
@@ -140,7 +209,39 @@
                 <form>
                     <a id="OrderIDCancel" href="" class="btn btn-primary btn-sm">OK</a>
                     <button id="btnCloseCancelOrder" type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
-                </form> 
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="confirmConfirmOrder" style="background-color: rgb(79 77 77 / 30%);">
+    <div class="modal-dialog">
+        <div class="modal-content" style="margin-top: 50%;">
+            <div class="modal-header">
+                <h4 class="modal-title" id="addTargetLabel">Are you sure to confirm this order?</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <a id="OrderIDConfirm" href="" class="btn btn-primary btn-sm">OK</a>
+                    <button id="btnCloseConfirmOrder" type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="confirmCompleteOrder" style="background-color: rgb(79 77 77 / 30%);">
+    <div class="modal-dialog">
+        <div class="modal-content" style="margin-top: 50%;">
+            <div class="modal-header">
+                <h4 class="modal-title" id="addTargetLabel">Are you sure to complete this order?</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <a id="OrderIDComplete" href="" class="btn btn-primary btn-sm">OK</a>
+                    <button id="btnCloseCompleteOrder" type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
+                </form>
             </div>
         </div>
     </div>
@@ -171,6 +272,36 @@
                 e.preventDefault();
                 e.stopPropagation();
                 $("#confirmCancelOrder").fadeOut(300);
+            });
+
+            $("#btnConfirmOrder").on("click", function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var id = $(this).attr('data-OrderID');
+                $("#OrderIDConfirm").attr('href', `/History/ConfirmOrder/${id}`);
+
+                $("#confirmConfirmOrder").fadeIn(300);
+            });
+
+            $("#btnCloseConfirmOrder").on("click", function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $("#confirmConfirmOrder").fadeOut(300);
+            });
+
+            $("#btnCompleteOrder").on("click", function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var id = $(this).attr('data-OrderID');
+                $("#OrderIDComplete").attr('href', `/History/CompleteOrder/${id}`);
+
+                $("#confirmCompleteOrder").fadeIn(300);
+            });
+
+            $("#btnCloseCompleteOrder").on("click", function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $("#confirmCompleteOrder").fadeOut(300);
             });
         });
     </script>

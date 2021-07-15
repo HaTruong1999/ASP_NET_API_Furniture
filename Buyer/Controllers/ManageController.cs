@@ -170,7 +170,7 @@ namespace Buyer.Mvc.Controllers
         public void GetProducts()
         {
             string BaseUrl = "http://localhost:3000/products";
-            Products = JsonConvert.DeserializeObject<List<Product>>(getdata(BaseUrl));
+            Products =  JsonConvert.DeserializeObject<List<Product>>(getdata(BaseUrl));
         }
         public void GetUsers()
         {
