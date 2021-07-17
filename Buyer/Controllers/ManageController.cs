@@ -30,7 +30,7 @@ namespace Buyer.Mvc.Controllers
         public List<Room> Rooms { get; set; } = new List<Room>();
         public List<DetailOrder> DetailOrders { get; set; } = new List<DetailOrder>();
         //product
-        public IActionResult Index(bool EnableFormAddProduct, string IdInsert, string IdErr, bool DeleteErr)
+        public async Task<IActionResult> IndexAsync(bool EnableFormAddProduct, string IdInsert, string IdErr, bool DeleteErr)
 		{
             userMain = HttpContext.Session.GetString("UserMain").ToString();
             if (EnableFormAddProduct)
@@ -50,9 +50,9 @@ namespace Buyer.Mvc.Controllers
             if (!string.IsNullOrEmpty(IdInsert))
                 idInsert = IdInsert;
 
-            GetProducts();
-            GetProducers();
-            GetRooms();
+            await GetProductsAsync();
+            await GetProducersAsync();
+            await GetRoomsAsync();
             var model = (Products,Producers,Rooms,User, enableFormAddProduct,idInsert,idErr,deleteErr);
             return View(model);
 		}
@@ -80,9 +80,9 @@ namespace Buyer.Mvc.Controllers
             var responseContent = await response.Content.ReadAsStringAsync();
         }
         [HttpPost]
-        public IActionResult InsertProduct(string id , string name , float price, float oldPrice, string photo, int amount, string roomId, string producerId)
+        public async Task<IActionResult> InsertProductAsync(string id , string name , float price, float oldPrice, string photo, int amount, string roomId, string producerId)
         {
-            GetProducts();
+            await GetProductsAsync();
 			if (CheckExistProduct(id.Trim()))
 			{
                 Product product = new Product(id, name, price, oldPrice, photo, amount, roomId, producerId);
@@ -112,10 +112,10 @@ namespace Buyer.Mvc.Controllers
             var responseContent = await response.Content.ReadAsStringAsync();
         }
         [HttpPost]
-        public IActionResult DeleteProduct(string id)
+        public async Task<IActionResult> DeleteProductAsync(string id)
         {
             string BaseUrl;
-            GetDetailOrders();
+            await GetDetailOrdersAsync();
 			if (DetailOrders.Count() > 0)
 			{
                 if (CheckExistDetailOrder(id))
@@ -155,7 +155,7 @@ namespace Buyer.Mvc.Controllers
             _ = CallApiEditProductAsync(BaseUrl, product);
             return RedirectToAction("Index");
         }
-        public IActionResult ManageUser()
+        public async Task<IActionResult> ManageUserAsync()
         {
             userMain = HttpContext.Session.GetString("UserMain").ToString();
             if (!string.IsNullOrEmpty(userMain))
@@ -163,34 +163,44 @@ namespace Buyer.Mvc.Controllers
                 string BaseUrl = "http://localhost:3000/users/" + userMain.Trim();
                 User = JsonConvert.DeserializeObject<List<User>>(getdata(BaseUrl))[0];
             }
-            GetUsers();
+            await GetUsersAsync();
             var model = (Users, User);
             return View(model);
         }
-        public void GetProducts()
+        public async Task GetProductsAsync()
         {
             string BaseUrl = "http://localhost:3000/products";
-            Products =  JsonConvert.DeserializeObject<List<Product>>(getdata(BaseUrl));
+            //Products =  JsonConvert.DeserializeObject<List<Product>>(getdata(BaseUrl));
+            Task<string> datatask = CallApiGetData(BaseUrl);
+            Products = JsonConvert.DeserializeObject<List<Product>>(await datatask);
         }
-        public void GetUsers()
+        public async Task GetUsersAsync()
         {
             string BaseUrl = "http://localhost:3000/users";
-            Users = JsonConvert.DeserializeObject<List<User>>(getdata(BaseUrl));
+            //Users = JsonConvert.DeserializeObject<List<User>>(getdata(BaseUrl));
+            Task<string> datatask = CallApiGetData(BaseUrl);
+            Users = JsonConvert.DeserializeObject<List<User>>(await datatask);
         }
-        public void GetProducers()
+        public async Task GetProducersAsync()
         {
             string BaseUrl = "http://localhost:3000/producers";
-            Producers = JsonConvert.DeserializeObject<List<Producer>>(getdata(BaseUrl));
+            //Producers = JsonConvert.DeserializeObject<List<Producer>>(getdata(BaseUrl));
+            Task<string> datatask = CallApiGetData(BaseUrl);
+            Producers = JsonConvert.DeserializeObject<List<Producer>>(await datatask);
         }
-        public void GetRooms()
+        public async Task GetRoomsAsync()
         {
             string BaseUrl = "http://localhost:3000/rooms";
-            Rooms = JsonConvert.DeserializeObject<List<Room>>(getdata(BaseUrl));
+            //Rooms = JsonConvert.DeserializeObject<List<Room>>(getdata(BaseUrl));
+            Task<string> datatask = CallApiGetData(BaseUrl);
+            Rooms = JsonConvert.DeserializeObject<List<Room>>(await datatask);
         }
-        public void GetDetailOrders()
+        public async Task GetDetailOrdersAsync()
         {
             string BaseUrl = "http://localhost:3000/OrderDetails";
-            DetailOrders = JsonConvert.DeserializeObject<List<DetailOrder>>(getdata(BaseUrl));
+            //DetailOrders = JsonConvert.DeserializeObject<List<DetailOrder>>(getdata(BaseUrl));
+            Task<string> datatask = CallApiGetData(BaseUrl);
+            DetailOrders = JsonConvert.DeserializeObject<List<DetailOrder>>(await datatask);
         }
         //CALL API
         public string getdata(String baseUrl)
@@ -213,6 +223,23 @@ namespace Buyer.Mvc.Controllers
                 RedirectToPage("error", new { msg = ex.Message + " | are you missing some json keys and values? please check your json data." });
             }
             return json;
+        }
+        public async Task<string> CallApiGetData(String baseUrl)
+        {
+            var httpClient = new HttpClient();
+
+            var httpRequestMessage = new HttpRequestMessage();
+            httpRequestMessage.Method = HttpMethod.Get;
+            httpRequestMessage.RequestUri = new Uri(baseUrl);
+
+            // Tạo StringContent
+            //string jsoncontent = JsonConvert.SerializeObject(Order);
+            var httpContent = new StringContent("", Encoding.UTF8, "application/json");
+            httpRequestMessage.Content = httpContent;
+
+            var response = await httpClient.SendAsync(httpRequestMessage);
+            var responseContent = await response.Content.ReadAsStringAsync();
+            return responseContent;
         }
     }
 }

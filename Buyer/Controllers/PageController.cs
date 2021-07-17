@@ -31,7 +31,7 @@ namespace Buyer.Mvc.Controllers
         public List<DetailOrder> DetailOrders { get; set; } = new List<DetailOrder>();
 
         public string BaseUrl = "";
-		public IActionResult Index(string userMain,string userName, string userNameErr, string password, string passwordErr, bool loginFailure)
+		public async Task<IActionResult> IndexAsync(string userMain,string userName, string userNameErr, string password, string passwordErr, bool loginFailure)
 		{
             User = new User();
             if (!string.IsNullOrEmpty(userMain))
@@ -39,10 +39,10 @@ namespace Buyer.Mvc.Controllers
                 string BaseUrl = "http://localhost:3000/users/" + userMain.Trim();
                 User = JsonConvert.DeserializeObject<List<User>>(getdata(BaseUrl))[0];
 
-                GetOrders(userMain);
+                await GetOrdersAsync(userMain);
                 int tempOrderId = FindOrderID();
                 if (tempOrderId > 0)
-                    GetDetailOrders(tempOrderId);
+                    await GetDetailOrdersAsync (tempOrderId);
             }
             if (!string.IsNullOrEmpty(userName))
                 UserName = userName;
@@ -55,14 +55,14 @@ namespace Buyer.Mvc.Controllers
             if (loginFailure)
                 LoginFailure = loginFailure;
 
-            GetProducts();
+            await GetProductsAsync();
             var model = (DetailOrders,Products_guestroom, Products_bedroom, Products_chickenroom, User, UserName, UserNameErr, Password, PasswordErr , LoginFailure);
             return View(model);
 		}
         [HttpPost]
-        public IActionResult LoginToPage(string Username, string Password)
+        public async Task<IActionResult> LoginToPageAsync(string Username, string Password)
         {
-            GetUsers();
+            await GetUsersAsync();
             foreach (User user in Users)
             {
                 if (user.username.Trim().Equals(Username.Trim()))
@@ -77,15 +77,20 @@ namespace Buyer.Mvc.Controllers
             }
             return RedirectToAction("Index", new { userName = Username, userNameErr = "User is not exist!"});
         }
-        public void GetUsers()
+        public async Task GetUsersAsync()
 		{
             string BaseUrl = "http://localhost:3000/users";
-            Users = JsonConvert.DeserializeObject<List<User>>(getdata(BaseUrl));
-        }
-        public void GetProducts()
+            //Users = JsonConvert.DeserializeObject<List<User>>(getdata(BaseUrl));
+            Task<string> datatask = CallApiGetData(BaseUrl);
+            Users = JsonConvert.DeserializeObject<List<User>>(await datatask);
+		}
+        public async Task GetProductsAsync()
         {
             string BaseUrl = "http://localhost:3000/products";
-            Products = JsonConvert.DeserializeObject<List<Product>>(getdata(BaseUrl));
+            //Products = JsonConvert.DeserializeObject<List<Product>>(getdata(BaseUrl));
+            Task<string> datatask = CallApiGetData(BaseUrl);
+            Products = JsonConvert.DeserializeObject<List<Product>>(await datatask);
+
             foreach (Product p in Products)
             {
                 if (p.roomId.Equals("BR003     "))
@@ -102,15 +107,26 @@ namespace Buyer.Mvc.Controllers
                 }
             }
         }
-        public void GetOrders(string userId)
+        public async Task GetOrdersAsync(string userId)
         {
             string BaseUrl = "http://localhost:3000/orders/users/" + userId;
-            Orders = JsonConvert.DeserializeObject<List<Order>>(getdata(BaseUrl));
+            //Orders = JsonConvert.DeserializeObject<List<Order>>(getdata(BaseUrl));
+            Task<string> datatask = CallApiGetData(BaseUrl);
+            Orders = JsonConvert.DeserializeObject<List<Order>>(await datatask);
         }
-        public void GetDetailOrders(int orderId)
+        public async Task GetAllOrdersAsync()
+        {
+            string BaseUrl = "http://localhost:3000/orders";
+            //Orders = JsonConvert.DeserializeObject<List<Order>>(getdata(BaseUrl));
+            Task<string> datatask = CallApiGetData(BaseUrl);
+            Orders = JsonConvert.DeserializeObject<List<Order>>(await datatask);
+        }
+        public async Task GetDetailOrdersAsync(int orderId)
         {
             string BaseUrl = "http://localhost:3000/OrderDetails/"+ orderId;
-            DetailOrders = JsonConvert.DeserializeObject<List<DetailOrder>>(getdata(BaseUrl));
+            //DetailOrders = JsonConvert.DeserializeObject<List<DetailOrder>>(getdata(BaseUrl));
+            Task<string> datatask = CallApiGetData(BaseUrl);
+            DetailOrders = JsonConvert.DeserializeObject<List<DetailOrder>>(await datatask);
         }
         //Tim Order ID
         public int FindOrderID()
@@ -145,7 +161,7 @@ namespace Buyer.Mvc.Controllers
             {
                 if (order.id > temp)
                     temp = order.id;
-                if (!order.bought)
+                if (!order.bought && order.userId.Trim().Equals(userId))
                     return order.id;
             }
             //create new order
@@ -176,6 +192,23 @@ namespace Buyer.Mvc.Controllers
                 RedirectToPage("error", new { msg = ex.Message + " | are you missing some json keys and values? please check your json data." });
             }
             return json;
+        }
+        public async Task<string> CallApiGetData(String baseUrl)
+        {
+            var httpClient = new HttpClient();
+
+            var httpRequestMessage = new HttpRequestMessage();
+            httpRequestMessage.Method = HttpMethod.Get;
+            httpRequestMessage.RequestUri = new Uri(baseUrl);
+
+            // Tạo StringContent
+            //string jsoncontent = JsonConvert.SerializeObject(Order);
+            var httpContent = new StringContent("", Encoding.UTF8, "application/json");
+            httpRequestMessage.Content = httpContent;
+
+            var response = await httpClient.SendAsync(httpRequestMessage);
+            var responseContent = await response.Content.ReadAsStringAsync();
+            return responseContent;
         }
         //Add to Cart
         public async Task CallApiInsertOrderDetail(String baseUrl, DetailOrder detailOrder)
@@ -220,21 +253,21 @@ namespace Buyer.Mvc.Controllers
             string BaseUrl = "http://localhost:3000/OrderDetails/"+ detailOrder.id;
             _ = CallApiUpdateOrderDetail(BaseUrl, detailOrder);
         }
-        public DetailOrder CheckExitsProduct(int orderId, string productId)
+        public async Task<DetailOrder> CheckExitsProductAsync(int orderId, string productId)
 		{
-            GetDetailOrders(orderId);
+            await GetDetailOrdersAsync(orderId);
             foreach (DetailOrder d in DetailOrders)
                 if (d.productId.Trim().Equals(productId))
                     return d;
             return new DetailOrder();
         }
-        public IActionResult AddToCart(string Id)
+        public async Task<IActionResult> AddToCartAsync(string Id)
         {
             string tempUserId = HttpContext.Session.GetString("UserMain");
-            GetOrders(tempUserId);
+            await GetAllOrdersAsync();
             int orderId = FindOrderIDToAddOrder(tempUserId);
 
-            DetailOrder tempDetailOrder = CheckExitsProduct(orderId, Id);
+            DetailOrder tempDetailOrder = await CheckExitsProductAsync(orderId, Id);
             if (tempDetailOrder.quantity > 0)
 			{
                 tempDetailOrder.quantity = tempDetailOrder.quantity + 1;
@@ -261,7 +294,6 @@ namespace Buyer.Mvc.Controllers
         public IActionResult ConfirmOrder(int OrderId)
         {
             string tempUserId = HttpContext.Session.GetString("UserMain");
-            //GetOrders(tempUserId);
 
             string BaseUrl = "http://localhost:3000/orders/" + OrderId;
             _ = CallApiConfirmOrder(BaseUrl);
